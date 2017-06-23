@@ -1,0 +1,111 @@
+{
+  "templates": [
+    "There is some performance issue in my system",
+    "Performance of my system is not good",
+    "Performance of my system has been degraded",
+    "Performance is degraded",
+    "Why all my applications are running slow on my system",
+    "Bandwidth of my system is degraded"
+  ],
+  "userSays": [
+    {
+      "data": [
+        {
+          "text": "There is some performance issue in my system"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "Performance of my system is not good"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "Performance of my system has been degraded"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }, 
+    {
+      "data": [
+        {
+          "text": "Performance is degraded"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }, 
+    {
+      "data": [
+        {
+          "text": "Why all my applications are running slow on my system"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },          
+    {
+      "data": [
+        {
+          "text": "Bandwidth of my system is degraded"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }    
+  ],
+  "name": "Performance_Issue",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "GetSystem",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "required": true,
+          "dataType": "@sys.any",
+          "name": "system_type",
+          "value": "$sys_type",
+          "prompts": [
+            "What is the system type?"
+          ]
+        },
+        {
+          "required": true,
+          "dataType": "@sys.any",
+          "name": "upload_logs",
+          "value": "$upload_logs",
+          "prompts": [
+            "Please collect the logs from the system using command 'ABC -getCollects' and upload it using provided upload log option. Once you are done with the upload, type 'done' here.?"
+          ]
+        }        
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "speech": "Root cause of the problem is: \n Perform below steps to fix the issue:"
+        }
+      ]
+    }
+  ],
+  "priority": 500000,
+  "cortanaCommand": {
+    "navigateOrService": "NAVIGATE",
+    "target": ""
+  },
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}
