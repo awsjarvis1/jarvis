@@ -1,0 +1,73 @@
+{
+  "templates": [
+    "drive is faulty",
+    "disk is faulty",
+    "One of the drive is gone bad",
+    "Amber light on one of the drive"
+  ],
+  "userSays": [
+    {
+      "data": [
+        {
+          "text": "drive is faulty"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "disk is faulty"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "One of the drive is gone bad"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "Amber light on one of the drive"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }    
+  ],
+  "name": "drive failure",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "GetSP",
+      "affectedContexts": [],
+      "parameters": [
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "speech": "Please upload the logs. I will analyze logs and provide solution for your problem"
+        }
+      ]
+    }
+  ],
+  "priority": 500000,
+  "cortanaCommand": {
+    "navigateOrService": "NAVIGATE",
+    "target": ""
+  },
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}
