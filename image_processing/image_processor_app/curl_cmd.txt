@@ -1,1 +1,0 @@
-curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@array.jpg"  http://localhost:5000/api/imageprocessor/receiveFile?sessionId=123
