@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.elk.service.ELKConstants;
 import com.elk.service.ElkService;
 
 @RunWith(SpringRunner.class)
@@ -34,20 +33,13 @@ public class elkMicroserviceApplicationTests {
 	@Autowired
 	private ElkService elkService;
 
+
+
 	@Test
 	public void TestInvalidFile(){
 
 		Path path = Paths.get("test.txt");
-		ResponseEntity<String> resp = elkService.executeScript(path, "sessionId", "intent",ELKConstants.SCRIPT_NAME);
-
-		assertTrue(resp.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
-	}
-
-	@Test
-	public void TestInvalidScriptFile(){
-
-		Path path = Paths.get("test.txt");
-		ResponseEntity<String> resp = elkService.executeScript(path, "sessionId", "intent","InValid_Test_Script.py");
+		ResponseEntity<String> resp = elkService.executeScript(path.toString(), "sessionId", "intent","Test.py");
 
 		assertTrue(resp.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
 	}

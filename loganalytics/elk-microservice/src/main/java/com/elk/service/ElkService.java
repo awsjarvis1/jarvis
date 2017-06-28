@@ -22,10 +22,9 @@ public class ElkService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ElkService.class);
 
+	public ResponseEntity<String> executeScript(String filePath, String sessionId, String intent, String scriptName){
 
-	public ResponseEntity<String> executeScript(Path filePath, String sessionId, String intent, String scriptName){
-
-		return callpythonScript( filePath.toString(),  sessionId , intent , scriptName);
+		return callpythonScript( filePath, sessionId , intent , scriptName);
 	}
 
 	private ResponseEntity<String> callpythonScript(String filePath, String sessionId, String intent , String scriptName){
@@ -55,17 +54,17 @@ public class ElkService {
 
 		}catch(IOException e){
 			logger.error("Error in getting script file path : " + e.getMessage());
-			response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = new ResponseEntity<>("Could not process Log File.",HttpStatus.INTERNAL_SERVER_ERROR);
 			return response;
 		}catch(Exception e){
 			logger.error("Error in executing script  : " + e.getMessage());
-			response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = new ResponseEntity<>("Could not process Log File.",HttpStatus.INTERNAL_SERVER_ERROR);
 			return response;
 		}
 
 		if(scriptOutput == null){
 			logger.error("script output File not created ." );
-			response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = new ResponseEntity<>("Could not process Log File.",HttpStatus.INTERNAL_SERVER_ERROR);
 			return response;
 		}
 
@@ -87,13 +86,13 @@ public class ElkService {
 
 			}catch(IOException e){
 				logger.error("Error in reading output : " + e.getMessage());
-				response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				response = new ResponseEntity<>("Could not process Log File.",HttpStatus.INTERNAL_SERVER_ERROR);
 				return response;
 			}
 
 		}else{
 			logger.error("Error in executing script");
-			response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = new ResponseEntity<>("Could not process Log File.",HttpStatus.INTERNAL_SERVER_ERROR);
 			return response;
 
 		}

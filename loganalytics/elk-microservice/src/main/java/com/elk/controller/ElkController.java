@@ -1,13 +1,17 @@
 package com.elk.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +28,23 @@ import com.elk.service.ElkService;
 @RestController
 public class ElkController {
 
+	@Value("#{environment['WORKSPACE']}")
+	private String scriptPath;
+
 	private static final Logger logger = LoggerFactory.getLogger(ElkController.class);
 
-	@Autowired
+
 	private ElkService service;
 
+
+	public ElkService getService() {
+		return service;
+	}
+
+	@Autowired
+	public void setService(ElkService service) {
+		this.service = service;
+	}
 
 	@RequestMapping("/status")
 	@ResponseStatus(HttpStatus.OK)
@@ -39,7 +55,7 @@ public class ElkController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String>  fileUpload(@RequestParam("file")MultipartFile file, @RequestParam("sessionId") String sessionId,
-			@RequestParam("intent") String intent){
+			@RequestParam("intent") String intent, HttpServletRequest request){
 
 		logger.debug("Received request param : fileName : " + file.getName() + " sessionId : " + sessionId + " intent : " + intent);
 
@@ -70,8 +86,15 @@ public class ElkController {
 
 		}
 
-		return service.executeScript(path,sessionId,intent,ELKConstants.SCRIPT_NAME);
+		String script = scriptPath + File.separator + ELKConstants.SCRIPT_NAME;
 
+		return elkService(path.toString(),request.getSession().getId(),intent,script);
+
+	}
+
+	public ResponseEntity<String> elkService(String path,String sessionId,String intent,String script){
+
+		return service.executeScript(path.toString(),sessionId,intent,script);
 	}
 
 
