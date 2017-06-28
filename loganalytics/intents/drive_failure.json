@@ -43,7 +43,7 @@
       "count": 0
     }    
   ],
-  "name": "drive failure",
+  "name": "drive_failure",
   "auto": true,
   "contexts": [],
   "responses": [

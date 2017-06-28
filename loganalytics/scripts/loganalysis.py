@@ -15,7 +15,8 @@ Pattern1 = {"query":{
                 "match_phrase": {"message": "PDO has set Drive Fault"}
                }}
 
-sample_config_folder = "/loganalytics/sampleconfig"
+sample_config_folder = os.path.dirname(os.path.abspath(__file__))
+
 logstashdir = "/opt/logstash"
 logstashexec = "/opt/logstash/bin/logstash"
 elasticsearchhost = "localhost:9200"
@@ -70,8 +71,8 @@ class loganalytics:
         #os.system("./bin/logstash -f /etc/logstash/conf.d/logstash.conf &")        
         #time.sleep(90)
         #subprocess.call("/opt/logstash/bin/logstash -f /etc/logstash/conf.d/logstash.conf")
-        proc = subprocess.Popen(["/opt/logstash/bin/logstash","-f",configfile])
-        es = Elasticsearch(['localhost:9200'])
+        proc = subprocess.Popen([logstashexec,"-f",configfile])
+        es = Elasticsearch([elasticsearchhost])
         while (es.indices.exists(session)) == 0 :
             #print("index is not there")
             time.sleep(5)
@@ -113,13 +114,14 @@ class loganalytics:
             #print "log is being analyzed to diagnose drive failure issue."
             logfilename = os.path.basename(path)
             sampleconfigfile = sample_config_folder + "/" + "drive_failure.conf"
+            #sampleconfigfile = "drive_failure.conf"
             self.CreateConfigFile(dir_path, session, logfilename, sampleconfigfile)
 
             configfile = dir_path + "/" + "drive_failure.conf"
             self.InitiateLogstash(configfile, session)
 
             # Create elasticsearch object.
-            es = Elasticsearch(['localhost:9200'])
+            es = Elasticsearch([elasticsearchhost])
             res = es.search(index=session,
                          body = Pattern1)
 
@@ -159,6 +161,7 @@ class loganalytics:
         elif (intent == "sp_servicemode"):
             logfilename = os.path.basename(path)
             sampleconfigfile = sample_config_folder + "/" + "sp_servicemode.conf"
+            #sampleconfigfile = "sp_servicemode.conf"
             self.CreateConfigFile(dir_path, session, logfilename, sampleconfigfile)
 
             configfile = dir_path + "/" + "sp_servicemode.conf"
