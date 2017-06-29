@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Jarvis {
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(Jarvis.class, args);
+                // made code changes to set the default running port 8080 to 8081
+                System.getProperties().put("server.port", 8081);
+		
+                SpringApplication.run(Jarvis.class, args);
 	}
 }
