@@ -55,7 +55,7 @@ public class ElkController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String>  fileUpload(@RequestParam("file")MultipartFile file, @RequestParam("sessionId") String sessionId,
-			@RequestParam("intent") String intent, HttpServletRequest request){
+			@RequestParam("intent") String intent,@RequestParam(value = "driveList", required = false) String driveList,  HttpServletRequest request){
 
 		logger.debug("Received request param : fileName : " + file.getName() + " sessionId : " + sessionId + " intent : " + intent);
 
@@ -88,13 +88,13 @@ public class ElkController {
 
 		String script = scriptPath + File.separator + ELKConstants.SCRIPT_NAME;
 
-		return elkService(path.toString(),request.getSession().getId(),intent,script);
+		return elkService(path.toString(),request.getSession().getId(),intent,driveList,script);
 
 	}
 
-	public ResponseEntity<String> elkService(String path,String sessionId,String intent,String script){
+	public ResponseEntity<String> elkService(String path,String sessionId,String intent,String driveList,String script){
 
-		return service.executeScript(path.toString(),sessionId,intent,script);
+		return service.executeScript(path.toString(),sessionId,intent,driveList,script);
 	}
 
 

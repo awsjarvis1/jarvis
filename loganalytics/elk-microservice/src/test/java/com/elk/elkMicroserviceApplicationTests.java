@@ -39,7 +39,7 @@ public class elkMicroserviceApplicationTests {
 	public void TestInvalidFile(){
 
 		Path path = Paths.get("test.txt");
-		ResponseEntity<String> resp = elkService.executeScript(path.toString(), "sessionId", "intent","Test.py");
+		ResponseEntity<String> resp = elkService.executeScript(path.toString(), "sessionId", "intent", "0_1_0,0_1_1","Test.py");
 
 		assertTrue(resp.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
 	}

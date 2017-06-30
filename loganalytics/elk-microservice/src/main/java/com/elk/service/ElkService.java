@@ -22,12 +22,12 @@ public class ElkService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ElkService.class);
 
-	public ResponseEntity<String> executeScript(String filePath, String sessionId, String intent, String scriptName){
+	public ResponseEntity<String> executeScript(String filePath, String sessionId, String intent, String driveList,String scriptName){
 
-		return callpythonScript( filePath, sessionId , intent , scriptName);
+		return callpythonScript( filePath, sessionId , intent , driveList, scriptName);
 	}
 
-	private ResponseEntity<String> callpythonScript(String filePath, String sessionId, String intent , String scriptName){
+	private ResponseEntity<String> callpythonScript(String filePath, String sessionId, String intent , String driveList, String scriptName){
 
 		String scriptOutput = null;
 		List<String> output = null;
@@ -45,7 +45,12 @@ public class ElkService {
 			commands.add(sessionId);
 			commands.add("-i");
 			commands.add(intent);
+			if(driveList != null){
+				commands.add("-d");
+				commands.add(driveList);
 
+			}
+			
 			logger.debug("Executing script <" + scriptName + "> with commands: " + commands);
 
 			scriptOutput = invokeScript(commands);
