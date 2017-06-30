@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,18 +24,22 @@ import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
 @Service
 @Scope("prototype")
 public class ImageProcessorService {
-
+        
+        @Value("#{environment['WORKSPACE_IMAGE']}")
+	private String scriptPath;
+	
 	private final static Logger logger = LoggerFactory.getLogger(ImageProcessorService.class);
 
 	private static final String IMAGE_PROCESSOR_DRIVE_SCRIPT = "find_faulty_disk.py";
 	private static final String IMAGE_PROCESSOR_SP_SCRIPT = "find_sp_fault.py";
 	private static final String IMAGE_EXTENSION = ".jpg";
 	private static final String JSON_EXTENSION = "_response.json";
-	private static final String SCRIPT_FOLDER_LOCATION = "/root/image_processor_app/src/main/resources/";
-	private static final String IMAGE_DUMP_LOCATION = "/root/image_processor_app/images";
-	private static final String IMAGE_FOLDER = "images";
+	private final String SCRIPT_FOLDER_LOCATION = scriptPath + "/image_processor_app/src/main/resources/";
+	private final String IMAGE_DUMP_LOCATION = scriptPath + "/image_processor_app/images";
+	private final String IMAGE_FOLDER = "images";
 
-	public JSONObject processFile(MultipartFile file, String sessionId, String intent) {
+	public JSONObject processFile(MultipartFile file, String sessionId, String intent) throws Exception{
+                checkWorkspaceEnvironment();
 		String fileName = file.getOriginalFilename();
 		int startIndex = 0;
 		if (fileName.contains("\\")) {
@@ -45,7 +50,8 @@ public class ImageProcessorService {
 	}
 
 	public File getImageFile(String responseFileName) throws Exception {
-		if (responseFileName == "") {
+		checkWorkspaceEnvironment();
+      	        if (responseFileName == "") {
 			throw new Exception("Unable to create image file name");
 		}
 		File responseImageFile = new File(IMAGE_DUMP_LOCATION + File.separator + responseFileName);
@@ -158,6 +164,12 @@ public class ImageProcessorService {
 			}
 		}
 		return responseJSON;
+	}
+	
+	private void checkWorkspaceEnvironment() throws Exception{
+		if(scriptPath == null){
+			throw new Exception("Workspace environment is not correctly set");
+		}
 	}
 
 	private void invokeScript(ArrayList<String> commands) throws Exception {

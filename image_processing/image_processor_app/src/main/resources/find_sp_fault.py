@@ -5,7 +5,7 @@ import argparse
 import json
 
 
-template_path = '/root/image_processor_app/src/main/resources/template.jpg'
+template_path = os.environ.get('WORKSPACE_IMAGE')+'/image_processor_app/src/main/resources/template.jpg'
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument("-i", "--image_path", dest = 'image_path', required = True)
