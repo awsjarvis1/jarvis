@@ -6,8 +6,11 @@
 	<groupId>com.cg.hackathon.imageprocessor</groupId>
 	<artifactId>image_processor_app</artifactId>
 	<name>Image processor app</name>
-	<description>This microservice processes an image to find out the abnormalities related to the array</description>
-	<version>1.0.0</version>
+	<description>This microservice processes an image to find out the faults in array.
+		1. Faults in disk drives - hard/soft media errors.
+		2. Faults in Storage processors - CPU is degraded/Faulted/Power down/power up/OS boot up. 
+	</description>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<parent>

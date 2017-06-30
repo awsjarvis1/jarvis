@@ -1,1 +1,12 @@
-curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@array.jpg"  http://localhost:5000/api/imageprocessor/receiveFile?sessionId=123
+
+List of curl commands :
+
+Receive file :
+
+curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@str_123.jpg" -sS 'http://localhost:5001/api/imageprocessor/receiveFile?sessionId=123&intent=drive_failure'
+ 
+curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@spfault_amber.jpg" -sS 'http://localhost:5001/api/imageprocessor/receiveFile?sessionId=123&intent=sp_servicemode'
+
+Get file : 
+
+curl -o test.jpg -sS 'http://localhost:5001/api/imageprocessor/getImage?fileName=str_123_123_processed.jpg'

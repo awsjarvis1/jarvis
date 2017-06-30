@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cg.hackathon.imageprocessor.ImageProcessorMessage;
+import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
 
 @Service
 @Scope("prototype")
@@ -26,35 +26,40 @@ public class ImageProcessorService {
 
 	private final static Logger logger = LoggerFactory.getLogger(ImageProcessorService.class);
 
-	private static final String IMAGE_PROCESSOR_SCRIPT = "find_faulty_disk.py";
+	private static final String IMAGE_PROCESSOR_DRIVE_SCRIPT = "find_faulty_disk.py";
+	private static final String IMAGE_PROCESSOR_SP_SCRIPT = "find_sp_fault.py";
 	private static final String IMAGE_EXTENSION = ".jpg";
 	private static final String JSON_EXTENSION = "_response.json";
-        private static final String OUTPUT_IMAGE_EXTENSION = "_processed.jpg";
-        private static final String IMAGE_DUMP_LOCATION = "/root/image_processor_app/images";        
+	private static final String SCRIPT_FOLDER_LOCATION = "/root/image_processor_app/src/main/resources/";
+	private static final String IMAGE_DUMP_LOCATION = "/root/image_processor_app/images";
+	private static final String IMAGE_FOLDER = "images";
 
-
-	public ImageProcessorMessage processFile(MultipartFile file, String sessionId) {
+	public JSONObject processFile(MultipartFile file, String sessionId, String intent) {
 		String fileName = file.getOriginalFilename();
-		String fileNameWithoutExt = fileName.substring(0, fileName.indexOf("."));
-		return processFile(file, sessionId, fileNameWithoutExt);
+		int startIndex = 0;
+		if (fileName.contains("\\")) {
+			startIndex = fileName.lastIndexOf("\\") + 1;
+		}
+		String fileNameWithoutExt = fileName.substring(startIndex, fileName.lastIndexOf("."));
+		return processFile(file, sessionId, fileNameWithoutExt, intent);
 	}
-	
-	public File getImageFile(String fileName, String sessionId) throws Exception{
-	      String fileNameWithoutExt = fileName.substring(0, fileName.indexOf("."));
-              String responseFileName = getFileName(fileNameWithoutExt, sessionId, "getFile");
-	      if(responseFileName == ""){
-                  throw new Exception("Unable to create image file name");
-              }
-              File responseImageFile = new File(IMAGE_DUMP_LOCATION + "/" + responseFileName);
-              if(!responseImageFile.exists()){
-                  throw new Exception("Unable to locate image file with name : " + IMAGE_DUMP_LOCATION + "/" + responseFileName);
-              }
-              logger.info("Retrieved image file from repository : " + responseImageFile);
-              return responseImageFile;
-       }
 
-	private ImageProcessorMessage processFile(MultipartFile multipartFile, String sessionId, String fileName) {
-		ImageProcessorMessage imageProcessorMessage = null;
+	public File getImageFile(String responseFileName) throws Exception {
+		if (responseFileName == "") {
+			throw new Exception("Unable to create image file name");
+		}
+		File responseImageFile = new File(IMAGE_DUMP_LOCATION + File.separator + responseFileName);
+		if (!responseImageFile.exists()) {
+			throw new Exception("Unable to locate image file with name : " + IMAGE_DUMP_LOCATION + File.separator
+					+ responseFileName);
+		}
+		logger.info("Retrieved image file from repository : " + responseImageFile);
+		return responseImageFile;
+	}
+
+	private JSONObject processFile(MultipartFile multipartFile, String sessionId, String fileName, String intent) {
+		// ImageProcessorMessage imageProcessorMessage = null;
+                JSONObject responseJSON = null;
 		FileOutputStream fileOutputStream = null;
 		String updatedFileName = getFileName(fileName, sessionId, "input");
 		String responseFileName = getFileName(fileName, sessionId, "output");
@@ -69,16 +74,18 @@ public class ImageProcessorService {
 				stream.close();
 				fileOutputStream.close();
 
-				invokeImageProcessorScript(file.getAbsolutePath());
+				checkDumpLocation();
 
-				String response = processResponseFile(responseFileName, sessionId);
+				invokeImageProcessorScript(file.getAbsolutePath(), intent);
 
-				logger.info("Received response from the file as : " + response);
+			 	responseJSON = processResponseFile(responseFileName, sessionId);
 
-				imageProcessorMessage = new ImageProcessorMessage();
-				imageProcessorMessage.setMessage(response);
+				// logger.info("Received response from the file as : " + response + " ,json object : " + new JSONObject(response));
+
+				// imageProcessorMessage = new ImageProcessorMessage();
+				// imageProcessorMessage.setJsonMessage(responseJSON);
 				logger.info("File : " + file.getName() + ", size : " + file.length());
-				
+
 				logger.info("Attempting to clean up files ");
 				cleanUp(updatedFileName, responseFileName);
 
@@ -100,26 +107,32 @@ public class ImageProcessorService {
 				cleanUp(updatedFileName, responseFileName);
 			}
 		}
-		return imageProcessorMessage;
+		return responseJSON;
 	}
 
-	private void invokeImageProcessorScript(String imageFilePath) throws Exception {
+	private void invokeImageProcessorScript(String imageFilePath, String intent) throws Exception {
 		ArrayList<String> commands = new ArrayList<>();
 		commands.add("/usr/bin/python");
-		commands.add("/root/image_processor_app/src/main/resources/" + IMAGE_PROCESSOR_SCRIPT);
+		if(intent.equalsIgnoreCase("drive_failure")){
+			commands.add(SCRIPT_FOLDER_LOCATION + IMAGE_PROCESSOR_DRIVE_SCRIPT);
+		}else if(intent.equalsIgnoreCase("sp_servicemode")){
+			commands.add(SCRIPT_FOLDER_LOCATION + IMAGE_PROCESSOR_SP_SCRIPT);
+		}else{
+			throw new Exception("Received unknown intent " + intent);
+		}
 		commands.add("-i");
-                commands.add(imageFilePath);
-                commands.add("-o");
-                commands.add(IMAGE_DUMP_LOCATION);
+		commands.add(imageFilePath);
+		commands.add("-o");
+		commands.add(IMAGE_DUMP_LOCATION);
 
-		logger.info("Executing script <" + IMAGE_PROCESSOR_SCRIPT + "> with commands: " + commands);
+		logger.info("Executing script with commands: " + commands);
 
 		invokeScript(commands);
 	}
 
-	private String processResponseFile(String responseFileName, String sessionId) {
-		String response = "";
-		File file = new File(IMAGE_DUMP_LOCATION+ "/" + responseFileName);
+	private JSONObject processResponseFile(String responseFileName, String sessionId) {
+		JSONObject responseJSON = null ;
+		File file = new File(IMAGE_DUMP_LOCATION + File.separator + responseFileName);
 
 		if (file.exists()) {
 			logger.info("Attempting to read file : " + file);
@@ -127,8 +140,9 @@ public class ImageProcessorService {
 			try {
 
 				fileInputStream = new FileInputStream(file);
-				response = IOUtils.toString(fileInputStream);
-				logger.info("Received response as from file : " + responseFileName + " as : " + response);
+				String response = IOUtils.toString(fileInputStream);
+				responseJSON = new JSONObject(response);
+				logger.info("Received response as from file : " + responseFileName + " as ** : " + responseJSON);
 				fileInputStream.close();
 			} catch (Exception e) {
 				logger.error("Error : " + e.getMessage());
@@ -143,7 +157,7 @@ public class ImageProcessorService {
 				}
 			}
 		}
-		return response;
+		return responseJSON;
 	}
 
 	private void invokeScript(ArrayList<String> commands) throws Exception {
@@ -181,13 +195,18 @@ public class ImageProcessorService {
 			return fileName + "_" + sessionId + IMAGE_EXTENSION;
 		} else if (type.equalsIgnoreCase("output")) {
 			return fileName + "_" + sessionId + JSON_EXTENSION;
-		} else if(type.equalsIgnoreCase("getFile")){
-			return fileName + "_" + sessionId + OUTPUT_IMAGE_EXTENSION;
-		} else {
+		}else {
 			return "";
 		}
 	}
-	
+
+	private void checkDumpLocation() {
+		File imageRepo = new File(IMAGE_FOLDER);
+		if (!imageRepo.exists()) {
+			imageRepo.mkdir();
+		}
+	}
+
 	private void cleanUp(String fileName1, String fileName2) {
 		File inputFile = new File(fileName1);
 		File outputFile = new File(fileName2);
@@ -202,6 +221,6 @@ public class ImageProcessorService {
 			outputFile = null;
 		}
 
-	}	
+	}
 
 }
