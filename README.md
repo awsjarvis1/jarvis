@@ -1,8 +1,9 @@
 # jarvis
 # image processing
-1) Find faulty disks in the input image
-   - Find amber LEDs and mark these disk as FAIL
-2) Added unit tests for find faulty disk
+This microservice processes an image to find out the faults in array.
+1. Faults in disk drives - hard/soft media errors.
+2. Faults in Storage processors - CPU is degraded/Faulted/Power down/power up/OS boot up.
+
 # ChatUI team
 This is the web service that will be connected to API.ai webhook.
 This will respond to chat requests
