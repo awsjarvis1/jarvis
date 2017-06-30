@@ -21,10 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.elk.service.ELKConstants;
 import com.elk.service.ElkService;
 
+@CrossOrigin
 @RestController
 public class ElkController {
 
