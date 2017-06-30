@@ -7,11 +7,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+
 import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import com.cg.hackathon.imageprocessor.configuration.AppConfig;
 import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
 import com.cg.hackathon.imageprocessor.service.ImageProcessorService;
+
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
@@ -109,7 +115,9 @@ public class ApplicationController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/imageprocessor/receiveFile")
 	public ResponseEntity<?> getImageProcessorResponse(@RequestParam("file") MultipartFile file,
+
 			@RequestParam("sessionId") String sessionId, @RequestParam("intent") String intent) throws Exception {
+
 
 		HttpHeaders responseHeader = new HttpHeaders();
 
@@ -119,9 +127,11 @@ public class ApplicationController {
 
 			setImageProcessorServiceInstance();
 
+
 			JSONObject responseJSON = imageProcessorService.processFile(file, sessionId, intent);
 
 			if (responseJSON == null) {
+
 				logger.error("Could not process image");
 				responseHeader.set("500", "Unexpected Error");
 				return new ResponseEntity<>("Could not process image. Cannot proceed", responseHeader,
@@ -129,7 +139,9 @@ public class ApplicationController {
 			}
 
 			responseHeader.set("200", "SUCCESS");
+
 			return new ResponseEntity<>(responseJSON.toString(), responseHeader, HttpStatus.OK);
+
 		} catch (Exception e) {
 			logger.error("Received exception while processing image : " + e.getMessage());
 			responseHeader.set("500", "Unexpected Error");
@@ -139,15 +151,18 @@ public class ApplicationController {
 	}
 
 	
+
 	@RequestMapping(value = "/api/imageprocessor/getImage")
 
        public ResponseEntity<?> getImages(@RequestParam("fileName") String fileName) throws Exception{
+
 
               HttpHeaders responseHeader = new HttpHeaders();
 
               InputStream is = null;
 
               try {
+
                      logger.info("Received request to upload file with name : " + fileName);
  		     
                      setImageProcessorServiceInstance();
@@ -155,6 +170,7 @@ public class ApplicationController {
                      is = new FileInputStream(file);
                      responseHeader.set("200", "SUCCESS");
                      return new ResponseEntity<>(IOUtils.toByteArray(is), responseHeader, HttpStatus.OK);
+
               } catch (Exception e) {
                      logger.error("Received exception while attempting to return image to GUI: " + e.getMessage());
                      responseHeader.set("500", "Unexpected Error");

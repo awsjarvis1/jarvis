@@ -1,6 +1,7 @@
 package com.cg.hackathon.imageprocessor;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +27,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
+
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +36,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cg.hackathon.imageprocessor.controller.ApplicationController;
+
 import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
+
 import com.cg.hackathon.imageprocessor.service.ImageProcessorService;
 
 @RunWith(PowerMockRunner.class)
@@ -64,6 +70,7 @@ public class ImageProcessorControllerTest {
 				"sample test".getBytes());
 
 		final String sessionId = "testSessionId";
+
 		final String intent = "sp_servicemode";
 
 		JSONObject testJSONObject = new JSONObject("{\"key\" : \"value\"}");
@@ -77,6 +84,7 @@ public class ImageProcessorControllerTest {
 		logger.info(
 				"Starting testing of getImageProcessorResponse() when valid response is received from image processor ");
 		assertEquals(responseEntity, appController.getImageProcessorResponse(mockMultipartFile, sessionId, intent));
+
 		logger.info(
 				"Successfully tested getImageProcessorResponse() when valid response is received from image processor ");
 	}
@@ -87,11 +95,13 @@ public class ImageProcessorControllerTest {
 				"sample test".getBytes());
 
 		final String sessionId = "testSessionId";
+
 		final String intent = "sp_servicemode";
  		
 		JSONObject testJSONObject = new JSONObject("{\"key\" : \"value\"}");
 
 		when(imageProcessorService.processFile(mockMultipartFile, sessionId, intent)).thenReturn(testJSONObject);
+
 
 		HttpHeaders responseHeader = new HttpHeaders();
 		responseHeader.set("500", "Unexpected Error");
@@ -99,7 +109,9 @@ public class ImageProcessorControllerTest {
 				responseHeader, HttpStatus.INTERNAL_SERVER_ERROR);
 		logger.info(
 				"Starting testing of getImageProcessorResponse() when invalid response is received from image processor ");
+
 		assertEquals(responseEntity, appController.getImageProcessorResponse(mockMultipartFile, sessionId, intent));
+
 		logger.info(
 				"Successfully tested getImageProcessorResponse() when invalid response is received from image processor ");
 	}
@@ -109,19 +121,24 @@ public class ImageProcessorControllerTest {
 		MultipartFile mockMultipartFile = null;
 
 		final String sessionId = "testSessionId";
+
 		final String intent = "sp_servicemode";
 		
 		
+
 		HttpHeaders responseHeader = new HttpHeaders();
 		responseHeader.set("500", "Unexpected Error");
 		ResponseEntity<?> responseEntity = new ResponseEntity<>("Could not process image. Cannot proceed",
 				responseHeader, HttpStatus.INTERNAL_SERVER_ERROR);
 		logger.info(
 				"Starting testing of getImageProcessorResponse() when invalid response is received from image processor ");
+
 		assertEquals(responseEntity, appController.getImageProcessorResponse(mockMultipartFile, sessionId, intent));
+
 		logger.info(
 				"Successfully tested getImageProcessorResponse() when invalid response is received from image processor ");
 	}
+
 
 	@Test
 	public void testValidGetImages() throws Exception {
@@ -180,5 +197,6 @@ public class ImageProcessorControllerTest {
 		}
 		return testFile;
 	}
+
 
 }

@@ -1,4 +1,5 @@
 
+
 List of curl commands :
 
 Receive file :
@@ -10,3 +11,4 @@ curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@spfault_amber.jpg
 Get file : 
 
 curl -o test.jpg -sS 'http://localhost:5001/api/imageprocessor/getImage?fileName=str_123_123_processed.jpg'
+

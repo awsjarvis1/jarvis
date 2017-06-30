@@ -14,16 +14,20 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
 
+
 @Service
 @Scope("prototype")
 public class ImageProcessorService {
+
         
         @Value("#{environment['WORKSPACE_IMAGE']}")
 	private String scriptPath;
@@ -66,6 +70,7 @@ public class ImageProcessorService {
 	private JSONObject processFile(MultipartFile multipartFile, String sessionId, String fileName, String intent) {
 		// ImageProcessorMessage imageProcessorMessage = null;
                 JSONObject responseJSON = null;
+
 		FileOutputStream fileOutputStream = null;
 		String updatedFileName = getFileName(fileName, sessionId, "input");
 		String responseFileName = getFileName(fileName, sessionId, "output");
@@ -80,6 +85,7 @@ public class ImageProcessorService {
 				stream.close();
 				fileOutputStream.close();
 
+
 				checkDumpLocation();
 
 				invokeImageProcessorScript(file.getAbsolutePath(), intent);
@@ -91,6 +97,7 @@ public class ImageProcessorService {
 				// imageProcessorMessage = new ImageProcessorMessage();
 				// imageProcessorMessage.setJsonMessage(responseJSON);
 				logger.info("File : " + file.getName() + ", size : " + file.length());
+
 
 				logger.info("Attempting to clean up files ");
 				cleanUp(updatedFileName, responseFileName);
@@ -113,6 +120,7 @@ public class ImageProcessorService {
 				cleanUp(updatedFileName, responseFileName);
 			}
 		}
+
 		return responseJSON;
 	}
 
@@ -133,12 +141,15 @@ public class ImageProcessorService {
 
 		logger.info("Executing script with commands: " + commands);
 
+
 		invokeScript(commands);
 	}
+
 
 	private JSONObject processResponseFile(String responseFileName, String sessionId) {
 		JSONObject responseJSON = null ;
 		File file = new File(IMAGE_DUMP_LOCATION + File.separator + responseFileName);
+
 
 		if (file.exists()) {
 			logger.info("Attempting to read file : " + file);
@@ -146,9 +157,11 @@ public class ImageProcessorService {
 			try {
 
 				fileInputStream = new FileInputStream(file);
+
 				String response = IOUtils.toString(fileInputStream);
 				responseJSON = new JSONObject(response);
 				logger.info("Received response as from file : " + responseFileName + " as ** : " + responseJSON);
+
 				fileInputStream.close();
 			} catch (Exception e) {
 				logger.error("Error : " + e.getMessage());
@@ -163,6 +176,7 @@ public class ImageProcessorService {
 				}
 			}
 		}
+
 		return responseJSON;
 	}
 	
@@ -170,6 +184,7 @@ public class ImageProcessorService {
 		if(scriptPath == null){
 			throw new Exception("Workspace environment is not correctly set");
 		}
+
 	}
 
 	private void invokeScript(ArrayList<String> commands) throws Exception {
@@ -207,6 +222,7 @@ public class ImageProcessorService {
 			return fileName + "_" + sessionId + IMAGE_EXTENSION;
 		} else if (type.equalsIgnoreCase("output")) {
 			return fileName + "_" + sessionId + JSON_EXTENSION;
+
 		}else {
 			return "";
 		}
@@ -218,6 +234,7 @@ public class ImageProcessorService {
 			imageRepo.mkdir();
 		}
 	}
+
 
 	private void cleanUp(String fileName1, String fileName2) {
 		File inputFile = new File(fileName1);
@@ -233,6 +250,8 @@ public class ImageProcessorService {
 			outputFile = null;
 		}
 
+
 	}
+
 
 }
