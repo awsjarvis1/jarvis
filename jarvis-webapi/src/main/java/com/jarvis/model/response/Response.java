@@ -1,60 +1,60 @@
 package com.jarvis.model.response;
 
+import java.util.List;
+
 public class Response {
+	private String speech;
+	private String displayText;
+	private DataObj dataObj;
+	private List<ContextOutObj> contextOutObj;
+	private String source;
+	private List<FollowUpEvent> followUpEvent;
 
-private String id;
-private String timestamp;
-private String lang;
-private Result result;
-private Status status;
-private String sessionId;
+	public String getSpeech() {
+		return speech;
+	}
 
-public String getId() {
-return id;
- }
+	public void setSpeech(String speech) {
+		this.speech = speech;
+	}
 
-public void setId(String id) {
-this.id = id;
- }
+	public String getDisplayText() {
+		return displayText;
+	}
 
-public String getTimestamp() {
-return timestamp;
- }
+	public void setDisplayText(String displayText) {
+		this.displayText = displayText;
+	}
 
-public void setTimestamp(String timestamp) {
-this.timestamp = timestamp;
- }
+	public DataObj getDataObj() {
+		return dataObj;
+	}
 
-public String getLang() {
-return lang;
- }
+	public void setDataObj(DataObj dataObj) {
+		this.dataObj = dataObj;
+	}
 
-public void setLang(String lang) {
-this.lang = lang;
- }
+	public List<ContextOutObj> getContextOutObj() {
+		return contextOutObj;
+	}
 
-public Result getResult() {
-return result;
- }
+	public void setContextOutObj(List<ContextOutObj> contextOutObj) {
+		this.contextOutObj = contextOutObj;
+	}
 
-public void setResult(Result result) {
-this.result = result;
- }
+	public String getSource() {
+		return source;
+	}
 
-public Status getStatus() {
-return status;
- }
+	public void setSource(String source) {
+		this.source = source;
+	}
 
-public void setStatus(Status status) {
-this.status = status;
- }
+	public List<FollowUpEvent> getFollowUpEvent() {
+		return followUpEvent;
+	}
 
-public String getSessionId() {
-return sessionId;
- }
-
-public void setSessionId(String sessionId) {
-this.sessionId = sessionId;
- }
-
+	public void setFollowUpEvent(List<FollowUpEvent> followUpEvent) {
+		this.followUpEvent = followUpEvent;
+	}
 }
