@@ -83,7 +83,7 @@ public class ElkService {
 				builder = new StringBuilder();
 
 				for(String str : output){
-					builder.append(str);
+					builder.append(str + "\n");
 				}
 
 				logger.debug("output of script : : " + builder); 
