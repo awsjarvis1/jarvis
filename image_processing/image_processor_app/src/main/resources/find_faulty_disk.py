@@ -402,7 +402,7 @@ def main():
         elem = enclDict[key]
         #out_diskList = []
         for i in range(0, len(elem)):
-            disk = str(bus) + "_" + str(key) + "_" + str(elem[i])
+            disk = str(bus) + "_" + str(key-1) + "_" + str(elem[i])
            # out_diskList.append(disk)
             out_enclList.append(disk) 
     
