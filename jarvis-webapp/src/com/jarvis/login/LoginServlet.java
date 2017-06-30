@@ -141,6 +141,9 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("user", userName);
 			
+			session.setAttribute("image_url", imageUrl);
+			session.setAttribute("log_url", logUrl);
+			
 			System.out.println("Image : " + imageUrl);
 			System.out.println("log : " + logUrl);
 			response.sendRedirect("home.jsp");
