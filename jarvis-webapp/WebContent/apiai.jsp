@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="referrer" content="no-referrer" />
-    <title>CustomerSupportBot</title>
+    <title>Jarvis- Support Center</title>
     <link rel="icon" type="image/png" href="images/jarvis.jpg">
     <meta property="og:title" content="CustomerSupportBot" />
     <meta property="og:description" content="" />
@@ -121,6 +121,8 @@
         <!--<div class="logo"></div>-->
     </div>
     <div class="b-agent-demo">
+        <span id="hdnusername" style="visibility:hidden;"> <%= session.getAttribute("user") %></span>
+        <span id="hdnsessionid" style="visibility:hidden;"> <%= request.getSession().getId() %></span>
         <!--<div class="b-agent-demo_header1">
           <div class="b-agent-demo_header-icon">
           <div class="b-agent-demo_header-icon-align-helper">

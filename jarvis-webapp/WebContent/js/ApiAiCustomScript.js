@@ -1,4 +1,5 @@
-var accessToken = "7d4f45de34c64ab696990f4b81151ddd",
+var accessToken = "eb214ecede6246dc9ab5811610b558bd",
+//var accessToken = "7d4f45de34c64ab696990f4b81151ddd",
 // var accessToken ="e9c210fd37ec4504bbcf8bfed7b6b0a2",
       baseUrl = "https://api.api.ai/v1/",
       $speechInput,
@@ -20,7 +21,7 @@ var accessToken = "7d4f45de34c64ab696990f4b81151ddd",
         }
       });
       $recBtn.on("click", function(event) {
-        start_img.src = 'Images/mic-slash.gif';
+        start_img.src = 'images/mic-slash.gif';
         if (window.SpeechSynthesisUtterance === undefined) {
       // Not supported
         } else {
@@ -87,16 +88,27 @@ var accessToken = "7d4f45de34c64ab696990f4b81151ddd",
       
       if(recognition)
       {
-      start_img.src="Images/mic-animate.gif"
+      start_img.src="images/mic-animate.gif"
 
     }
-    else{start_img.src="Images/mic.gif"}
+    else{start_img.src="images/mic.gif"}
     
     }
 var strResultText="";
 var strdivcontainer="";
 var strdivrequest="";
-var strdivresponse="";
+var strdivresponse = "";
+
+var sessionid = "guestsessionid"; 
+var username = "guest"; 
+if (document.getElementById("hdnsessionid") != null)
+{
+    sessionid = document.getElementById("hdnsessionid").innerHTML;
+}
+if (document.getElementById("hdnusername") != null)
+{
+    username = document.getElementById("hdnusername").innerHTML;;
+}
 
     function send() {
       var text = $speechInput.val();
@@ -112,7 +124,7 @@ var strdivresponse="";
         headers: {
           "Authorization": "Bearer " + accessToken
         },
-        data: JSON.stringify({query: text, lang: "en", sessionId: "sessionId_userid_username_role"}),
+        data: JSON.stringify({ query: text, lang: "en", sessionId: sessionid + "-" + username }),
 
         success: function(data) { 
           //alert( JSON.stringify(data, undefined, 2))
