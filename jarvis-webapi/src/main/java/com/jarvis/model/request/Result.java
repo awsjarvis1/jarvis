@@ -1,98 +1,122 @@
 package com.jarvis.model.request;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "source", "resolvedQuery", "action", "actionIncomplete", "parameters", "contexts", "metadata",
+		"fulfillment", "score" })
 public class Result {
 
-	private Parameters parameters;
-	private List<Object> contexts = null;
-	private String resolvedQuery;
+	@JsonProperty("source")
 	private String source;
-	private Double score;
-	private String speech;
-	private Fulfillment fulfillment;
-	private Boolean actionIncomplete;
+	@JsonProperty("resolvedQuery")
+	private String resolvedQuery;
+	@JsonProperty("action")
 	private String action;
+	@JsonProperty("actionIncomplete")
+	private Boolean actionIncomplete;
+	@JsonProperty("parameters")
+	private Parameters parameters;
+	@JsonProperty("contexts")
+	private List<Context> contexts = null;
+	@JsonProperty("metadata")
 	private Metadata metadata;
+	@JsonProperty("fulfillment")
+	private Fulfillment fulfillment;
+	@JsonProperty("score")
+	private Double score;
 
-	public Parameters getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(Parameters parameters) {
-		this.parameters = parameters;
-	}
-
-	public List<Object> getContexts() {
-		return contexts;
-	}
-
-	public void setContexts(List<Object> contexts) {
-		this.contexts = contexts;
-	}
-
-	public String getResolvedQuery() {
-		return resolvedQuery;
-	}
-
-	public void setResolvedQuery(String resolvedQuery) {
-		this.resolvedQuery = resolvedQuery;
-	}
-
+	@JsonProperty("source")
 	public String getSource() {
 		return source;
 	}
 
+	@JsonProperty("source")
 	public void setSource(String source) {
 		this.source = source;
 	}
 
-	public Double getScore() {
-		return score;
+	@JsonProperty("resolvedQuery")
+	public String getResolvedQuery() {
+		return resolvedQuery;
 	}
 
-	public void setScore(Double score) {
-		this.score = score;
+	@JsonProperty("resolvedQuery")
+	public void setResolvedQuery(String resolvedQuery) {
+		this.resolvedQuery = resolvedQuery;
 	}
 
-	public String getSpeech() {
-		return speech;
-	}
-
-	public void setSpeech(String speech) {
-		this.speech = speech;
-	}
-
-	public Fulfillment getFulfillment() {
-		return fulfillment;
-	}
-
-	public void setFulfillment(Fulfillment fulfillment) {
-		this.fulfillment = fulfillment;
-	}
-
-	public Boolean getActionIncomplete() {
-		return actionIncomplete;
-	}
-
-	public void setActionIncomplete(Boolean actionIncomplete) {
-		this.actionIncomplete = actionIncomplete;
-	}
-
+	@JsonProperty("action")
 	public String getAction() {
 		return action;
 	}
 
+	@JsonProperty("action")
 	public void setAction(String action) {
 		this.action = action;
 	}
 
+	@JsonProperty("actionIncomplete")
+	public Boolean getActionIncomplete() {
+		return actionIncomplete;
+	}
+
+	@JsonProperty("actionIncomplete")
+	public void setActionIncomplete(Boolean actionIncomplete) {
+		this.actionIncomplete = actionIncomplete;
+	}
+
+	@JsonProperty("parameters")
+	public Parameters getParameters() {
+		return parameters;
+	}
+
+	@JsonProperty("parameters")
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
+
+	@JsonProperty("contexts")
+	public List<Context> getContexts() {
+		return contexts;
+	}
+
+	@JsonProperty("contexts")
+	public void setContexts(List<Context> contexts) {
+		this.contexts = contexts;
+	}
+
+	@JsonProperty("metadata")
 	public Metadata getMetadata() {
 		return metadata;
 	}
 
+	@JsonProperty("metadata")
 	public void setMetadata(Metadata metadata) {
 		this.metadata = metadata;
+	}
+
+	@JsonProperty("fulfillment")
+	public Fulfillment getFulfillment() {
+		return fulfillment;
+	}
+
+	@JsonProperty("fulfillment")
+	public void setFulfillment(Fulfillment fulfillment) {
+		this.fulfillment = fulfillment;
+	}
+
+	@JsonProperty("score")
+	public Double getScore() {
+		return score;
+	}
+
+	@JsonProperty("score")
+	public void setScore(Double score) {
+		this.score = score;
 	}
 
 }
