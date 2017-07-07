@@ -3888,7 +3888,7 @@
         msgUploadEnd: 'Done',
         msgUploadEmpty: 'No valid data available for upload.',
         msgValidationError: 'Validation Error',
-        msgLoading: 'Loading file {index} of {files} &hellip;',
+        msgLoading: '<img alt="ajax-progress" src="images/ajax-progress.gif" width="50" height="50" /> Loading file {index} of {files} &hellip;',
         msgProgress: 'Loading file {index} of {files} - {name} - {percent}% completed.',
         msgSelected: '{n} {files} selected',
         msgFoldersNotAllowed: 'Drag & drop files only! {n} folder(s) dropped were skipped.',

@@ -109,14 +109,15 @@ var Site = {
             return false;
         }
 
-        $.ajax({
-            url: $('#URLSource').data('signout-url'),
-            type: "POST",
-            dataType: "text",
-            success: function (data) {
-                window.location.href = data;
-            }
-        }).fail(Site.onAjaxError);
+        window.location.href = "logout.jsp";
+        //$.ajax({
+        //    url:"logout.jsp", //$('#URLSource').data('signout-url'),
+        //    type: "POST",
+        //    dataType: "text",
+        //    success: function (data) {
+        //        window.location.href = data;
+        //    }
+        //}).fail(Site.onAjaxError);
     },
 
     onAjaxError: function (jqXhr, exception) {

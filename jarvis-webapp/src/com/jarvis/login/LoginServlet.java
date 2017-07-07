@@ -22,8 +22,10 @@ import com.jarvis.model.Account;
  * Servlet implementation class LoginServlet
  */
 
-@WebServlet(urlPatterns = "/login", initParams = { @WebInitParam(name = "db_url", value = "jdbc:mysql://jarvisdb.cc6xxahk0j9u.us-east-2.rds.amazonaws.com:3306/JARVIS_SCHEMA"),
-		@WebInitParam(name = "db_username", value = "jarvisdb"), @WebInitParam(name = "db_password", value = "password123"),
+@WebServlet(urlPatterns = "/login", initParams = {
+		@WebInitParam(name = "db_url", value = "jdbc:mysql://jarvisdb.cc6xxahk0j9u.us-east-2.rds.amazonaws.com:3306/JARVIS_SCHEMA"),
+		@WebInitParam(name = "db_username", value = "jarvisdb"),
+		@WebInitParam(name = "db_password", value = "password123"),
 		@WebInitParam(name = "db_drivername", value = "com.mysql.jdbc.Driver") })
 
 public class LoginServlet extends HttpServlet {
@@ -35,6 +37,7 @@ public class LoginServlet extends HttpServlet {
 	private String dbDriverName;
 	private String logUrl;
 	private String imageUrl;
+	private String webhookUrl;
 
 	public void init() throws ServletException {
 		ServletConfig servletConfig = getServletConfig();
@@ -42,27 +45,27 @@ public class LoginServlet extends HttpServlet {
 		dbUserName = servletConfig.getInitParameter("db_username");
 		dbPassword = servletConfig.getInitParameter("db_password");
 		dbDriverName = servletConfig.getInitParameter("db_drivername");
-		
+
 		Connection connection = null;
 		Statement statment = null;
 		ResultSet resultSet = null;
-		
-		try{
+
+		try {
 			Class.forName(dbDriverName);
 			connection = DriverManager.getConnection(dbUrl, dbUserName, dbPassword);
 			statment = connection.createStatement();
 			resultSet = statment.executeQuery("select * from JARVIS_SCHEMA.EUREKA");
 
 			while (resultSet.next()) {
-			  logUrl = resultSet.getString("LOG_URL");
-			  imageUrl = resultSet.getString("IMAGE_URL");
+				logUrl = resultSet.getString("LOG_URL");
+				imageUrl = resultSet.getString("IMAGE_URL");
+				webhookUrl = resultSet.getString("WEBHOOK_URL");
 			}
-		
-	
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
-			
-		}finally {
+
+		} finally {
 			try {
 				if (resultSet != null) {
 					resultSet.close();
@@ -124,28 +127,34 @@ public class LoginServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-				
+
 		System.out.println("image : " + imageUrl);
 		System.out.println("log : " + logUrl);
-		
+
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 
 		System.out.println("user name is: " + userName);
 
 		Account account = getAccountFromCredentials(userName);
-		System.out.println("password: " + account.getPassword());
+		// Account account = new Account();
+		// account.setUserName("user");
+		// account.setPassword("password");
+		// System.out.println("password: " + account.getPassword());
 
 		if (password.equals(account.getPassword())) {
 			System.out.println("authenticated");
 			HttpSession session = request.getSession();
 			session.setAttribute("user", userName);
-			
+
 			session.setAttribute("image_url", imageUrl);
 			session.setAttribute("log_url", logUrl);
-			
+			session.setAttribute("webhook_url", webhookUrl);
+
 			System.out.println("Image : " + imageUrl);
 			System.out.println("log : " + logUrl);
+			System.out.println("webhook: " + webhookUrl);
+
 			response.sendRedirect("home.jsp");
 		} else {
 			System.out.println("wrong credentials");
