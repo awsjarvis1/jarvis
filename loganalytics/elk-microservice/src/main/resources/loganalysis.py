@@ -102,6 +102,7 @@ class LogAnalytics:
                     drive = Bus + "_" + Encl + "_" + Disk
 
 
+
                     if(self.df['drive'].str.contains(drive).any()):
                         cur_value = self.df.loc[self.df["drive"]==drive,desiredcol]
                         self.df.loc[self.df["drive"]==drive,desiredcol] = cur_value + 1
@@ -285,18 +286,3 @@ def InvokeJarFile(*args):
     result = result.replace("]","")
     result = result.replace("'","")
     return result
-
-            
-     
-            
-
-
-            
-
-
-                
-                
-
-
-
-
