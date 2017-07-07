@@ -21,6 +21,11 @@ import com.jarvis.remedy.BugTracker;
 @CrossOrigin
 @RestController
 public class JarvisController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(JarvisController.class);
+	
+	@Autowired
+	private ChatEngine chatEngine;
 
 	private static final Logger logger = LoggerFactory.getLogger(JarvisController.class);
 

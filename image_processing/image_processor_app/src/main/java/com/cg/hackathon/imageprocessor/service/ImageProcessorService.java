@@ -71,6 +71,7 @@ public class ImageProcessorService {
 		// ImageProcessorMessage imageProcessorMessage = null;
                 JSONObject responseJSON = null;
 
+
 		FileOutputStream fileOutputStream = null;
 		String updatedFileName = getFileName(fileName, sessionId, "input");
 		String responseFileName = getFileName(fileName, sessionId, "output");
