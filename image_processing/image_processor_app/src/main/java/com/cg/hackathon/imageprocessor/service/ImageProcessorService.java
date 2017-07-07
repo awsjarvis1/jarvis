@@ -28,8 +28,7 @@ import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
 @Scope("prototype")
 public class ImageProcessorService {
 
-        
-    @Value("#{environment['WORKSPACE_IMAGE']}")
+  @Value("#{environment['WORKSPACE_IMAGE']}")
 	private String scriptPath;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ImageProcessorService.class);
@@ -71,8 +70,7 @@ public class ImageProcessorService {
 
 	private JSONObject processFile(MultipartFile multipartFile, String sessionId, String fileName, String intent, String fileExtension) {
 		// ImageProcessorMessage imageProcessorMessage = null;
-                JSONObject responseJSON = null;
-
+    JSONObject responseJSON = null;
 		FileOutputStream fileOutputStream = null;
 		String updatedFileName = getFileName(fileName, sessionId, "input", fileExtension);
 		String responseFileName = getFileName(fileName, sessionId, "output", JSON_EXTENSION);
@@ -92,7 +90,7 @@ public class ImageProcessorService {
 
 
 				checkDumpLocation();
-
+        
 				invokeImageProcessorScript(file.getAbsolutePath(), intent);
 
 			 	responseJSON = processResponseFile(responseFileName, sessionId);
@@ -156,8 +154,6 @@ public class ImageProcessorService {
 	private JSONObject processResponseFile(String responseFileName, String sessionId) {
 		JSONObject responseJSON = null ;
 		File file = new File(getImageDumpLocation() + File.separator + responseFileName);
-
-
 
 
 		if (file.exists()) {
@@ -235,7 +231,7 @@ public class ImageProcessorService {
 			return "";
 		}
 	}
-	
+  
 	private void checkDumpLocation() {
 		File imageRepo = new File(IMAGE_FOLDER);
 		if (!imageRepo.exists()) {
@@ -251,9 +247,6 @@ public class ImageProcessorService {
 		return scriptPath + IMAGE_DUMP_LOCATION;
 	}
 	
-
-
-
 	private void cleanUp(String fileName1, String fileName2) {
 		File inputFile = new File(fileName1);
 		File outputFile = new File(fileName2);

@@ -1,68 +1,84 @@
 package com.jarvis.model.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "id", "timestamp", "lang", "result", "status", "sessionId" })
 public class Request {
 
-	private String lang;
-	private Status status;
-	private String timestamp;
-	private String sessionId;
-	private Result result;
+	@JsonProperty("id")
 	private String id;
-	private OriginalRequest originalRequest;
+	@JsonProperty("timestamp")
+	private String timestamp;
+	@JsonProperty("lang")
+	private String lang;
+	@JsonProperty("result")
+	private Result result;
+	@JsonProperty("status")
+	private Status status;
+	@JsonProperty("sessionId")
+	private String sessionId;
 
-	public String getLang() {
-		return lang;
-	}
-
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
-	public String getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
-
-	public Result getResult() {
-		return result;
-	}
-
-	public void setResult(Result result) {
-		this.result = result;
-	}
-
+	@JsonProperty("id")
 	public String getId() {
 		return id;
 	}
 
+	@JsonProperty("id")
 	public void setId(String id) {
 		this.id = id;
 	}
 
-	public OriginalRequest getOriginalRequest() {
-		return originalRequest;
+	@JsonProperty("timestamp")
+	public String getTimestamp() {
+		return timestamp;
 	}
 
-	public void setOriginalRequest(OriginalRequest originalRequest) {
-		this.originalRequest = originalRequest;
+	@JsonProperty("timestamp")
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
 	}
+
+	@JsonProperty("lang")
+	public String getLang() {
+		return lang;
+	}
+
+	@JsonProperty("lang")
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	@JsonProperty("result")
+	public Result getResult() {
+		return result;
+	}
+
+	@JsonProperty("result")
+	public void setResult(Result result) {
+		this.result = result;
+	}
+
+	@JsonProperty("status")
+	public Status getStatus() {
+		return status;
+	}
+
+	@JsonProperty("status")
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	@JsonProperty("sessionId")
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	@JsonProperty("sessionId")
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
 }

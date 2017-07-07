@@ -16,9 +16,6 @@ parser.add_argument("-o", "--output_dir", dest = 'output_dir', required = False)
     
 args = parser.parse_args()
 
-
-
-
 fault_sp_script = os.environ.get('WORKSPACE_IMAGE')+'/image_processor_app/src/main/resources/find_sp_fault.py'
 imgFolder = "imgFolder"
 

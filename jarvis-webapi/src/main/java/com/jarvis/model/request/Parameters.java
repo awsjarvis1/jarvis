@@ -1,24 +1,24 @@
 package com.jarvis.model.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "ArrayType" })
 public class Parameters {
 
-	private String city;
-	private String name;
+	@JsonProperty("ArrayType")
+	private String arrayType;
 
-	public String getCity() {
-		return city;
+	@JsonProperty("ArrayType")
+	public String getArrayType() {
+		return arrayType;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	@JsonProperty("ArrayType")
+	public void setArrayType(String arrayType) {
+		this.arrayType = arrayType;
 	}
 
 }

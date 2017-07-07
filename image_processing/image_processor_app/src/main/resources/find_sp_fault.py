@@ -65,7 +65,6 @@ coord = (pixel_x, pixel_y)
 font = cv2.FONT_HERSHEY_SIMPLEX
 cv2.putText(color_img, 'X', (pixel_x-22,pixel_y+72), font, 2, (0, 0, 255), 12, cv2.LINE_AA)
 
-
 outDict = {}
 
 imag = cv2.imread(args.image_path)
