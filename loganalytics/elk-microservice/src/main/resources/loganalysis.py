@@ -284,7 +284,6 @@ def InvokeJarFile(*args):
     result = result.replace("[","")
     result = result.replace("]","")
     result = result.replace("'","")
-    print(result)    
     return result
 
             
