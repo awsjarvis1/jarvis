@@ -1,11 +1,14 @@
 #!/usr/bin/python
 from datetime import datetime
-from elasticsearch import Elasticsearch
 import os, time, subprocess
 from shutil import copy
 import shutil
 import fileinput
 import pandas as pd
+from elprocessing import ELProcessing
+from weka import WekaLogAnalytics
+from subprocess import *
+import json
 
 service_mode_reason = {'0x80b8':'Invalid Disk Type is detected',
                        '0x80bf':'The first 4 disks in the DPE has mismatched types',
@@ -13,53 +16,54 @@ service_mode_reason = {'0x80b8':'Invalid Disk Type is detected',
                        '0x80b8':'Invalid Disk Type is detected',
                        '0x8001':'Fault detected in CPU. The storage processor has failed need to replace this SP'}
 
-Pattern1 = {"query":{
-                "match_phrase": {"message": "PDO has set Drive Fault"}
-               }}
-
-es_dh_query = ""
 sample_config_folder = os.path.dirname(os.path.abspath(__file__))
 
+WEKA_NUMERIC_HEADER = "@relation drive_health\n\
+\n\
+@attribute pfa_hw numeric\n\
+@attribute timeout numeric\n\
+@attribute parity numeric\n\
+@attribute bad_blks numeric\n\
+@attribute inv_sec numeric\n\
+@attribute recon_sec numeric\n\
+@attribute rec_by_drv numeric\n\
+@attribute state {pass, fail}\n\
+\n\
+@data\n"
 
-logstashdir = "/opt/logstash"
-logstashexec = "/opt/logstash/bin/logstash"
-elasticsearchhost = "localhost:9200"
-base_dir = "/loganalytics"
+BASE_DIR = "/loganalytics"
 responsefilename = "response"
 
-class loganalytics:
+class LogAnalytics:
     def __init__(self):
         self.df = []
-        response_file_path = ""
+        self.response_file_path = ""
+        self.elp = ELProcessing()
+        self.log_path = ""
     
-    # Write response to the given file
     def PrintResponseToResultFile(self,response):
+        ''' Write response to the given file
+        '''
         file = open(self.response_file_path, "w")
         file.write(response)
         file.close
         print (self.response_file_path)
     
-    # Copy sammple config file to target directory and repalce log file & elasticsearch
-    # index in config file with actual values
     def CreateConfigFile(self, targetdir, session, logfilename, sampleconfigfile):
-        #print(targetdir)
-        #print(logfilename)
-        #print("copied config file to target directory")
+        ''' Copy sammple config file to target directory and repalce log file & elasticsearch
+            index in config file with actual values
+        '''
         copy(sampleconfigfile, targetdir)
-        newconfigfile = targetdir + "/" + os.path.basename(sampleconfigfile)
+        newconfigfilepath = targetdir + "/" + os.path.basename(sampleconfigfile)
 
-        #print(newconfigfile)
-    
-        tempFile = open( newconfigfile, 'r+' )
+        tempFile = open( newconfigfilepath, 'r+' )
 
         pathmatch = "pathtobereplaced"
         indexmatch = "indextobereplaced"
         newlogpath = targetdir + "/" + logfilename
         newindexname = str(session)
-        #print(newindexname)
 
-        #print(newlogpath)
-        for line in fileinput.input( newconfigfile ):
+        for line in fileinput.input( newconfigfilepath ):
             newline = ""
             if pathmatch in line :
                 newline = line.replace( pathmatch, newlogpath ) 
@@ -69,37 +73,24 @@ class loganalytics:
                 newline = line.replace( indexmatch, newindexname ) 
             tempFile.write(newline)
     
-        tempFile.close() 
+        tempFile.close()
 
-    def InitiateLogstash(self, configfile, session):
-        os.chdir(logstashdir)
-        path = os.getcwd()
-        #print path
-        #os.system("./bin/logstash -f /etc/logstash/conf.d/logstash.conf &")        
-        #time.sleep(90)
-        #subprocess.call("/opt/logstash/bin/logstash -f /etc/logstash/conf.d/logstash.conf")
-        proc = subprocess.Popen([logstashexec,"-f",configfile])
-        es = Elasticsearch([elasticsearchhost])
-        while (es.indices.exists(session)) == 0 :
-            #print("index is not there")
-            time.sleep(5)
-        #else: 
-        #    print "no index"
+        return newconfigfilepath
 
-        time.sleep(5)
-        pid = proc.pid
-        proc.terminate()
-           
-   
     def GetResponseForDriveErrorCode(self, errorcode):
         if(errorcode == "0x22d0006"):
 	    return("(Activate timer expired.)\nRecommendation: Please remove the drive from the slot and re-insert it. It should fix the issue")
 	elif(errorcode == "0x2600003"):
             return("(Media error threshold exceeded.)\nRecommendation: Drive needs to be replaced. Please log a service ticket to get it replaced.")
             
+    def QueryElasticsearchAndPopulateDataframe(self, query, session, desiredcol):
+        ''' Queries elasticsearch based on the query string provided and
+            populate the data frame. It also increments the value of
+            desired column.
+        '''
 
-    def QueryElasticsearchAndPopulateDataframe(self, es, query, session, desiredcol):
-        res = es.search(index=session, body=query)
+        # TODO: if there are >10000+ records then need to handle it.
+        res = self.elp.QueryElasticsearch(query, session)
 
         for hit in res['hits']['hits']:
             for record in hit["_source"].keys():
@@ -109,6 +100,7 @@ class loganalytics:
                     Disk = hit["_source"][u'disk']
 
                     drive = Bus + "_" + Encl + "_" + Disk
+
 
                     if(self.df['drive'].str.contains(drive).any()):
                         cur_value = self.df.loc[self.df["drive"]==drive,desiredcol]
@@ -122,56 +114,49 @@ class loganalytics:
                         frames = [self.df, localdf]
                         self.df = pd.concat(frames)
 
+
     def AnalyzeLog(self,path,intent,session,drives):
+        ''' Main entry function for log analytics. Based on the
+            intent it does various log analysis and provide the
+            root cause and recommendation.
+        '''
         drives = drives.replace("[","")
         drives = drives.replace("]","")
         drivelist = drives.split(",")
         session = session.lower()
+        self.log_path = path
+        
         # Create directory with session id for further processing.
-        dir_path = base_dir + "/" + str(session)
+        session_dir_path = BASE_DIR + "/" + str(session)
 
-	self.response_file_path = dir_path + "/" + responsefilename
+	self.response_file_path = session_dir_path + "/" + responsefilename
 	
         # See if directory is already existed. If yes then fail the request as session ID should
         # be unique.
-        if os.path.exists(dir_path):            
-            #print(dir_path + " is already existed.")
-            shutil.rmtree(dir_path)
-            #self.PrintResponseToResultFile("Directory with session Id:" + session + " is already existed", response_file_path)
-            #return
+        if os.path.exists(session_dir_path):            
+            shutil.rmtree(session_dir_path)
         
         # Copy provided log file(s) to the temporary direcotry created with session id.
-        os.makedirs(dir_path)
-	#print("Created directory " + dir_path)
-        copy(path, dir_path)
-        #print("Copied log file from " + path + " to " + dir_path)
+        os.makedirs(session_dir_path)
+
+        copy(path, session_dir_path)
            
         logfilename = os.path.basename(path)
-        if (intent == "pool_offline"):
-            #print "log is being analyzed to diagnose pool offline issue."
-            dir = ""
-
-        elif (intent == "drive_failure"):
-            #print "log is being analyzed to diagnose drive failure issue."
-            
+        if (intent == "drive_failure"):
             sampleconfigfile = sample_config_folder + "/" + "drive_failure.conf"
-            #sampleconfigfile = "drive_failure.conf"
-            self.CreateConfigFile(dir_path, session, logfilename, sampleconfigfile)
+            configfilepath = self.CreateConfigFile(session_dir_path, session, logfilename, sampleconfigfile)
+            
+            self.elp.InitiateLogstash(configfilepath, session)
 
-            configfile = dir_path + "/" + "drive_failure.conf"
-            self.InitiateLogstash(configfile, session)
-
+            # Query elasticsearch.
             query  = { "query": {"match_phrase": {"message": "taken offline."} } }
-            # Create elasticsearch object.
-            es = Elasticsearch([elasticsearchhost])
-            res = es.search(index=session,
-                         body = query)
+            res = self.elp.QueryElasticsearch(query, session)
 
             hit_count = res['hits']['total']
            
-            Final_output = "" 
+            final_output = "" 
             if hit_count == 0:
-               Final_output = "No Pattern Found"
+               final_output = "Unable to root cause the issue. Please create service request for the further assistance"
             else:
                 for hit in res['hits']['hits']:
      
@@ -185,77 +170,126 @@ class loganalytics:
                             if dae in drivelist or drives == "":
                                 err_code = hit["_source"][u'err_code']
                                 response = "Drive:" + dae + " is failed due to " + err_code + self.GetResponseForDriveErrorCode(err_code)
-                                Final_output = Final_output + response + "\n\n"
+                                final_output = final_output + response + "\n\n"
                                 
-            self.PrintResponseToResultFile(Final_output)
+            self.PrintResponseToResultFile(final_output)
 
-            
         elif (intent == "sp_servicemode"):
-            
             sampleconfigfile = sample_config_folder + "/" + "sp_servicemode.conf"
-            #sampleconfigfile = "sp_servicemode.conf"
-            self.CreateConfigFile(dir_path, session, logfilename, sampleconfigfile)
+            
+            configfilepath = self.CreateConfigFile(session_dir_path, session, logfilename, sampleconfigfile)
 
-            configfile = dir_path + "/" + "sp_servicemode.conf"
-            self.InitiateLogstash(configfile, session)
+            configfile = session_dir_path + "/" + "sp_servicemode.conf"
+            self.elp.InitiateLogstash(configfilepath, session)
 
-            #print "log is being analyzed to diagnose SP in service mode issue."
             base_string = "The SP is in service mode and the reason is -"
             return_string = base_string + "Sorry! couldn't find the reason"
 
-            es = Elasticsearch([elasticsearchhost])  # use default of localhost, port 9200
-            matches = es.search(index=session, q='name:"Rescue Reason"')
+            query  = { "query": {"match_phrase": {"message": "Rescue Reason"} } }
+            matches = self.elp.QueryElasticsearch(query, session)
+
             hits = matches['hits']['hits']
-         
-            #print "Matched count - hit"
-            #if matches.get('hits') is not None and matches['hits'].get('hits') is not None:
-                #print "Matched found"
-            for hit in hits:
-                error_code = hit['_source']['value'] 
-                error_code = error_code.replace("\r","")
-                if error_code in service_mode_reason:
-                    return_string = base_string + service_mode_reason[error_code]
+            hit_count = matches['hits']['total']
+           
+            if hit_count == 0:
+               return_string = "Unable to root cause the issue. Please create service request for the further assistance"
+            else:
+                for hit in hits:
+                    error_code = hit['_source']['value'] 
+                    error_code = error_code.replace("\r","")
+                    if error_code in service_mode_reason:
+                        return_string = base_string + service_mode_reason[error_code]
             
             self.PrintResponseToResultFile(return_string)
       
         elif (intent == "drive_healthcheck"):
-            #print("log is being analyzed for drive_healthcheck issue")            
-            
             sampleconfigfile = sample_config_folder + "/" + "drive_healthcheck.conf"
-            self.CreateConfigFile(dir_path, session, logfilename, sampleconfigfile)
+            configfilepath = self.CreateConfigFile(session_dir_path, session, logfilename, sampleconfigfile)
 
-            configfile = dir_path + "/" + "drive_healthcheck.conf"
-            
-            self.InitiateLogstash(configfile, session)
+            self.elp.InitiateLogstash(configfilepath, session)
      
-            
-            es = Elasticsearch([elasticsearchhost])
-
             raw_data = {}
             self.df = pd.DataFrame(raw_data, columns = ['drive', 'pfa_hw', 'timeout', 'parity', 'bad_blks', 'inv_sec', 'recon_sec', 'rec_by_drv'])
         
             #Query 1 for "bad_blks"
             es_dh_query  = { "query": {"match_phrase": {"message": "820 Soft Media Error [Bad block]"} } }
             desiredcol = "bad_blks"    
-            self.QueryElasticsearchAndPopulateDataframe(es, es_dh_query, session, desiredcol)
+            self.QueryElasticsearchAndPopulateDataframe(es_dh_query, session, desiredcol)
            
             #Query 2 for "inv_sec"
             es_dh_query  = { "query": {"match_phrase": {"message": "840 Data Sector Invalidated"} } }
             desiredcol = "inv_sec"
-            self.QueryElasticsearchAndPopulateDataframe(es, es_dh_query, session, desiredcol)
+            self.QueryElasticsearchAndPopulateDataframe(es_dh_query, session, desiredcol)
  
             #Query 3 for "recon_sec"
             es_dh_query  = { "query": {"match_phrase": {"message": "689 Sector Reconstructed"} } }
             desiredcol = "recon_sec"
-            self.QueryElasticsearchAndPopulateDataframe(es, es_dh_query, session, desiredcol)
+            self.QueryElasticsearchAndPopulateDataframe(es_dh_query, session, desiredcol)
             
             #Query 3 for "rec_by_drv"
             es_dh_query  = { "query": {"match_phrase": {"message": "6a0 Disk soft media error"} } }
             desiredcol = "rec_by_drv"
-            self.QueryElasticsearchAndPopulateDataframe(es, es_dh_query, session, desiredcol)
+            self.QueryElasticsearchAndPopulateDataframe(es_dh_query, session, desiredcol)
+
+            test_file_path = session_dir_path + "/drive_healthcheck.arff"
+
+            self.df.to_csv(test_file_path)
+
+            f = open(test_file_path, "a")
+            f.seek(0)
+            f.write(WEKA_NUMERIC_HEADER)
+            f.close()
+
+        elif(intent == "log_analytics"):
+            
+            weka = WekaLogAnalytics(BASE_DIR, sample_config_folder + "/weka_miniport_filters.txt", sample_config_folder + "/weka_miniport.conf", session)
+            test_data_file = weka.PrepareTestData(self.log_path)
+            
+            args = ['WekaService-0.0.1-SNAPSHOT-jar-with-dependencies.jar', test_data_file, 'LogAnalytics', session]
+
+            result = InvokeJarFile(*args)
+
+            j = json.loads(result)
+
+            output = j['0']
+            print(output.lower())
+            if output.lower() != "unknown":
+                final_result = "It seems to be " + output + " issue. Please log a service request for further assistance."
+            else:
+                final_result = "Unable to find the root cause from the provided log. Please log a service ticket for further assistance."
+            
+            self.PrintResponseToResultFile(final_result)
 
 
-            self.df.to_csv(dir_path + "/drive_healthcheck.csv")        
+        else:
+            self.PrintResponseToResultFile("Unable to understand the intent:")
+
+
+def InvokeJarFile(*args):
+    ''' Invokes provided jar file with the given arguments. It listens
+        stdout for any output or error
+    '''
+    process = Popen(['java', '-jar']+list(args), stdout=PIPE, stderr=PIPE)
+    ret = []
+    while process.poll() is None:
+        line = process.stdout.readline()
+        if line != '' and line.endswith('\n'):
+            ret.append(line[:-1])
+    stdout, stderr = process.communicate()
+    ret += stdout.split('\n')
+    if stderr != '':
+        ret += stderr.split('\n')
+    ret.remove('')
+    result = str(ret)
+    result = result.replace("[","")
+    result = result.replace("]","")
+    result = result.replace("'","")
+    print(result)    
+    return result
+
+            
+     
+            
 
 
             
