@@ -245,8 +245,8 @@ class LogAnalytics:
             
             weka = WekaLogAnalytics(BASE_DIR, sample_config_folder + "/weka_miniport_filters.txt", sample_config_folder + "/weka_miniport.conf", session)
             test_data_file = weka.PrepareTestData(self.log_path)
-            
-            args = ['WekaService-0.0.1-SNAPSHOT-jar-with-dependencies.jar', test_data_file, 'LogAnalytics', session]
+            weka_path = sample_config_folder + "/WekaService-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+            args = [weka_path, test_data_file, 'LogAnalytics', session]
 
             result = InvokeJarFile(*args)
 
