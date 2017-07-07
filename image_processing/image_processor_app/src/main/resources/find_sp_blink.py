@@ -64,11 +64,6 @@ blink = 0
 s = ""
 # Create a List to keep index for Blink ON-OFF
 BlinkList = []
-
-for fl in range(0, len(FaultList)):
-    if "FAULTED" in FaultList[fl]:
-        s = "Running Powerup tests"
-        check_F = 1
         BlinkList.append("ON")
         if check_N == 1:
             blink = 1
@@ -99,20 +94,27 @@ for bIndex in range(0, len(BlinkList)):
     if "ON" in BlinkList[bIndex]:
         outputImageIndex = bIndex
  
+
+for fl in range(0, len(FaultList)):
+    if "FAULTED" in FaultList[fl]:
+        s = "Running Powerup tests"
+        check_F = 1
 print "Blink::", blink, s , BlinkList, outputImageIndex
 img = imageList[outputImageIndex].split(".jpeg")[0] + "_processed.jpg"
 
 subprocess.call(["mv", img, args.output_dir])
-orig = args.output_dir + img.split("/")[1]
+orig = args.output_dir + "/" + img.split("/")[1]
 print orig
-dest = orig.split("-")[0] + "_processed.jpg"
+#dest = orig.split("-")[0] + "_processed.jpg"
+dest = orig.split(".jpg")[0].rsplit("-", 1)[0] + "_processed.jpg"
 
 subprocess.call(["mv", orig, dest])
 
 outDict = {}
 
 outDict["response_text"] = s
-outDict["response_image"] = img.split("/")[1].split("-")[0] + "_processed.jpg"
+#outDict["response_image"] = img.split("/")[1].split("-")[0] + "_processed.jpg"
+outDict["response_image"] = dest.split("/")[-1]
 
 
 outputfile = args.output_dir + "/" + out_response
