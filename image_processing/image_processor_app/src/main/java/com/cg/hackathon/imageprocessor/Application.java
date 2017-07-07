@@ -9,7 +9,9 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class Application {
 	public static void main(String[] args) {
-		System.getProperties().put("server.port", 5000);
+
+		System.getProperties().put("server.port", 5001);
+
 		SpringApplication.run(Application.class, args);
 	}
 
