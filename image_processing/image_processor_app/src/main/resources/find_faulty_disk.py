@@ -429,7 +429,6 @@ def main():
      
         font = cv2.FONT_HERSHEY_SIMPLEX
         cv2.putText(image, 'X', ((i[0]-105),(i[1]-400)), font, 8, (0, 0, 255), 14, cv2.LINE_AA)
-        
     if args.output_dir:
         result_image_path = os.path.join(args.output_dir, out_image)
         cv2.imwrite(result_image_path, image)

@@ -159,6 +159,7 @@ public class ImageProcessorService {
 
 
 
+
 		if (file.exists()) {
 			logger.info("Attempting to read file : " + file);
 			FileInputStream fileInputStream = null;
@@ -250,6 +251,7 @@ public class ImageProcessorService {
 		return scriptPath + IMAGE_DUMP_LOCATION;
 	}
 	
+
 
 
 	private void cleanUp(String fileName1, String fileName2) {

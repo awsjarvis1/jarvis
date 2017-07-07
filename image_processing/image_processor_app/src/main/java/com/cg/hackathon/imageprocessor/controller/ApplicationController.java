@@ -117,12 +117,12 @@ public class ApplicationController {
 	@RequestMapping(method = RequestMethod.POST, value = "/api/imageprocessor/receiveFile")
 	public ResponseEntity<?> getImageProcessorResponse(@RequestParam("file") MultipartFile file,
 			@RequestParam("sessionId") String sessionId, @RequestParam("intent") String intent) throws Exception {
+
 		HttpHeaders responseHeader = new HttpHeaders();
 		try {
 			logger.info("Received request with image file name :" + file.getOriginalFilename() + ",  size : "
 					+ file.getSize());
 			setImageProcessorServiceInstance();
-
 
 			JSONObject responseJSON = imageProcessorService.processFile(file, sessionId, intent);
 			if (responseJSON == null) {
@@ -143,6 +143,7 @@ public class ApplicationController {
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 
     @RequestMapping(value = "/api/imageprocessor/getImage")
     public ResponseEntity<?> getImages(@RequestParam("fileName") String fileName) throws Exception{
