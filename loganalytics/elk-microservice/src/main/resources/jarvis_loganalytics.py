@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from loganalysis import loganalytics 
+from loganalysis import LogAnalytics 
 
 
 import sys, getopt, tarfile, os, fnmatch
@@ -40,7 +40,7 @@ def main(argv):
       elif opt in ("-d"):
           drives = arg
          
-   testObj = loganalytics()
+   testObj = LogAnalytics()
    testObj.AnalyzeLog(path,intent,session,drives)
 
 
