@@ -11,8 +11,7 @@
 		1. Faults in disk drives - hard/soft media errors.
 		2. Faults in Storage processors - CPU is degraded/Faulted/Power down/power up/OS boot up. 
 	</description>
-	<version>1.0.1</version>
-
+	<version>1.0.2</version>
 	<packaging>jar</packaging>
 
 	<parent>

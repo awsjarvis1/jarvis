@@ -8,6 +8,8 @@ curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@str_123.jpg" -sS 
  
 curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@spfault_amber.jpg" -sS 'http://localhost:5001/api/imageprocessor/receiveFile?sessionId=123&intent=sp_servicemode'
 
+curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@spvideo.mp4" -sS 'http://localhost:5001/api/imageprocessor/receiveFile?sessionId=123&intent=video'
+
 Get file : 
 
 curl -o test.jpg -sS 'http://localhost:5001/api/imageprocessor/getImage?fileName=str_123_123_processed.jpg'
