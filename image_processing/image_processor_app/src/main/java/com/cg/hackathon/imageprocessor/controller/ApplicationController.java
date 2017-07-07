@@ -123,15 +123,19 @@ public class ApplicationController {
 					+ file.getSize());
 			setImageProcessorServiceInstance();
 
+
 			JSONObject responseJSON = imageProcessorService.processFile(file, sessionId, intent);
 			if (responseJSON == null) {
+
 				logger.error("Could not process image");
 				responseHeader.set("500", "Unexpected Error");
 				return new ResponseEntity<>("Could not process image. Cannot proceed", responseHeader,
 						HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			responseHeader.set("200", "SUCCESS");
+
 			return new ResponseEntity<>(responseJSON.toString(), responseHeader, HttpStatus.OK);
+
 		} catch (Exception e) {
 			logger.error("Received exception while processing image : " + e.getMessage());
 			responseHeader.set("500", "Unexpected Error");
@@ -140,9 +144,7 @@ public class ApplicationController {
 		}
 	}
 
-	
-
-	@RequestMapping(value = "/api/imageprocessor/getImage")
+    @RequestMapping(value = "/api/imageprocessor/getImage")
     public ResponseEntity<?> getImages(@RequestParam("fileName") String fileName) throws Exception{
         HttpHeaders responseHeader = new HttpHeaders();
         InputStream is = null;

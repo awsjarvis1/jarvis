@@ -337,8 +337,10 @@ def main():
   #  removeNoise(dae1)
     
     validcoordinates = []
+
     enclDict = {} 
     out_enclList = [] 
+
     diskList = []
     encl_count_print = 0
 
@@ -397,6 +399,7 @@ def main():
             validcoordinates.append(i)
             
     #print enclDict, encl_count_print
+
     #s = "There are " + str(encl_count_print) + " enclosures. \n"  
 #    Hardcoding Bus no as 0
     bus = 0
@@ -415,6 +418,7 @@ def main():
         #out_diskList = []
         #out_enclList.append(out_diskList) 
         #s = s + "Faulty disks in enc " + str(pkey + 1)+ ": NONE \n"
+
         pkey += 1      
 
        
@@ -430,6 +434,7 @@ def main():
         result_image_path = os.path.join(args.output_dir, out_image)
         cv2.imwrite(result_image_path, image)
 
+
     s = ""
     for iu in range(0, len(out_enclList)-1):
         s += str(out_enclList[iu]) + "," 
@@ -437,6 +442,7 @@ def main():
 
     outDict["response_text"] = s 
     outDict["response_image"] = out_image 
+
     print outDict
     #outputfile = os.path.join(args.output_dir, out_response)
     outputfile = args.output_dir + "/" + out_response

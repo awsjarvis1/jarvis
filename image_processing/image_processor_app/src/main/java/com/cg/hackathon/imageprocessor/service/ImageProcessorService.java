@@ -158,6 +158,7 @@ public class ImageProcessorService {
 		File file = new File(getImageDumpLocation() + File.separator + responseFileName);
 
 
+
 		if (file.exists()) {
 			logger.info("Attempting to read file : " + file);
 			FileInputStream fileInputStream = null;
@@ -229,7 +230,6 @@ public class ImageProcessorService {
 			return fileName + "_" + sessionId + fileExtension;
 		} else if (type.equalsIgnoreCase("output")) {
 			return fileName + "_" + sessionId + fileExtension;
-
 		}else {
 			return "";
 		}
@@ -251,6 +251,7 @@ public class ImageProcessorService {
 	}
 	
 
+
 	private void cleanUp(String fileName1, String fileName2) {
 		File inputFile = new File(fileName1);
 		File outputFile = new File(fileName2);
@@ -264,6 +265,7 @@ public class ImageProcessorService {
 			outputFile.delete();
 			outputFile = null;
 		}
+
 
 	}
 

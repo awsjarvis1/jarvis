@@ -56,14 +56,14 @@ bottom_right = (top_left[0] + w, top_left[1] + h)
 
 #cv2.circle(color_img,top_left,10,(0,0,255),5)
 
-pixel_x = top_left[0]+ 30   # x coordinate
+pixel_x = top_left[0]+ 52   # x coordinate
 pixel_y = top_left[1]+ 18   # y coordinate
 
 coord = (pixel_x, pixel_y)
 
 #cv2.circle(color_img,coord,10,(0,0,255),5)
 font = cv2.FONT_HERSHEY_SIMPLEX
-cv2.putText(color_img, 'X', (pixel_x,pixel_y+72), font, 2, (0, 0, 255), 12, cv2.LINE_AA)
+cv2.putText(color_img, 'X', (pixel_x-22,pixel_y+72), font, 2, (0, 0, 255), 12, cv2.LINE_AA)
 
 
 outDict = {}
