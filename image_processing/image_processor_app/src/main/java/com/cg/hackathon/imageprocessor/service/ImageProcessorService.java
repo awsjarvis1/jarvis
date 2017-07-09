@@ -233,7 +233,7 @@ public class ImageProcessorService {
 	}
   
 	private void checkDumpLocation() {
-		File imageRepo = new File(IMAGE_FOLDER);
+		File imageRepo = new File(scriptPath + IMAGE_FOLDER);
 		if (!imageRepo.exists()) {
 			imageRepo.mkdir();
 		}
