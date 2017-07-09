@@ -319,17 +319,14 @@ def main():
     
     
     for i in nArrayDisk[0]:
-        #cv2.circle(image,i,10,(200,0,0),5)
+        cv2.circle(image,i,10,(200,0,0),5)
     #    print i
-        pass
     for i in nArrayDisk[1]:
-        #cv2.circle(image,i,10,(0,0,255),5)
-        pass
+        cv2.circle(image,i,10,(0,0,255),5)
 
     if len(nArrayDisk) > 2 :
         for i in nArrayDisk[2]:
-           # cv2.circle(image,i,10,(0,255,0),5)
-            pass
+            cv2.circle(image,i,10,(0,255,0),5)
 
     
     
@@ -425,10 +422,13 @@ def main():
     # find this amber belongs to which to which disk in which dae
 
     for i in validcoordinates:
-       # cv2.circle(image,i,10,(0,255,0),5)      
+
+        cv2.circle(image,i,10,(0,255,0),5)      
      
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(image, 'X', ((i[0]-105),(i[1]-400)), font, 8, (0, 0, 255), 14, cv2.LINE_AA)
+        cv2.putText(image, 'FAIL', ((i[0]-35),(i[1]-600)), font, 2, (0, 0, 255), 8, cv2.LINE_AA)
+
+        
     if args.output_dir:
         result_image_path = os.path.join(args.output_dir, out_image)
         cv2.imwrite(result_image_path, image)
@@ -454,3 +454,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+>>>>>>> master

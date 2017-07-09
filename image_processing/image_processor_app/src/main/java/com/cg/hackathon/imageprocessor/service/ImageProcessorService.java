@@ -28,18 +28,18 @@ import com.cg.hackathon.imageprocessor.message.ImageProcessorMessage;
 @Scope("prototype")
 public class ImageProcessorService {
 
-  @Value("#{environment['WORKSPACE_IMAGE']}")
+        
+        @Value("#{environment['WORKSPACE_IMAGE']}")
 	private String scriptPath;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ImageProcessorService.class);
 
 	private static final String IMAGE_PROCESSOR_DRIVE_SCRIPT = "find_faulty_disk.py";
 	private static final String IMAGE_PROCESSOR_SP_SCRIPT = "find_sp_fault.py";
-	private static final String IMAGE_PROCESSOR_VIDEO_SCRIPT = "find_sp_blink.py";
-	
+	private static final String IMAGE_EXTENSION = ".jpg";
 	private static final String JSON_EXTENSION = "_response.json";
-	private final String SCRIPT_FOLDER_LOCATION = "/image_processor_app/src/main/resources/";
-	private final String IMAGE_DUMP_LOCATION = "images";
+	private final String SCRIPT_FOLDER_LOCATION = scriptPath + "/image_processor_app/src/main/resources/";
+	private final String IMAGE_DUMP_LOCATION = scriptPath + "/image_processor_app/images";
 	private final String IMAGE_FOLDER = "images";
 
 	public JSONObject processFile(MultipartFile file, String sessionId, String intent) throws Exception{
@@ -50,8 +50,7 @@ public class ImageProcessorService {
 			startIndex = fileName.lastIndexOf("\\") + 1;
 		}
 		String fileNameWithoutExt = fileName.substring(startIndex, fileName.lastIndexOf("."));
-		String fileExtension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-		return processFile(file, sessionId, fileNameWithoutExt, intent, fileExtension);
+		return processFile(file, sessionId, fileNameWithoutExt, intent);
 	}
 
 	public File getImageFile(String responseFileName) throws Exception {
@@ -59,24 +58,23 @@ public class ImageProcessorService {
       	        if (responseFileName == "") {
 			throw new Exception("Unable to create image file name");
 		}
-		File responseImageFile = new File(getImageDumpLocation() + File.separator + responseFileName);
+		File responseImageFile = new File(IMAGE_DUMP_LOCATION + File.separator + responseFileName);
 		if (!responseImageFile.exists()) {
-			throw new Exception("Unable to locate image file with name : " + getImageDumpLocation() + File.separator
+			throw new Exception("Unable to locate image file with name : " + IMAGE_DUMP_LOCATION + File.separator
 					+ responseFileName);
 		}
 		logger.info("Retrieved image file from repository : " + responseImageFile);
 		return responseImageFile;
 	}
 
-	private JSONObject processFile(MultipartFile multipartFile, String sessionId, String fileName, String intent, String fileExtension) {
+	private JSONObject processFile(MultipartFile multipartFile, String sessionId, String fileName, String intent) {
 		// ImageProcessorMessage imageProcessorMessage = null;
-    JSONObject responseJSON = null;
-		FileOutputStream fileOutputStream = null;
-		String updatedFileName = getFileName(fileName, sessionId, "input", fileExtension);
-		String responseFileName = getFileName(fileName, sessionId, "output", JSON_EXTENSION);
-		
-		System.out.println("File input name : " + updatedFileName); 		
+                JSONObject responseJSON = null;
 
+
+		FileOutputStream fileOutputStream = null;
+		String updatedFileName = getFileName(fileName, sessionId, "input");
+		String responseFileName = getFileName(fileName, sessionId, "output");
 
 		if (!multipartFile.isEmpty()) {
 			try {
@@ -90,7 +88,7 @@ public class ImageProcessorService {
 
 
 				checkDumpLocation();
-        
+
 				invokeImageProcessorScript(file.getAbsolutePath(), intent);
 
 			 	responseJSON = processResponseFile(responseFileName, sessionId);
@@ -131,18 +129,16 @@ public class ImageProcessorService {
 		ArrayList<String> commands = new ArrayList<>();
 		commands.add("/usr/bin/python");
 		if(intent.equalsIgnoreCase("drive_failure")){
-			commands.add(getScriptFolderLocation() + IMAGE_PROCESSOR_DRIVE_SCRIPT);
+			commands.add(SCRIPT_FOLDER_LOCATION + IMAGE_PROCESSOR_DRIVE_SCRIPT);
 		}else if(intent.equalsIgnoreCase("sp_servicemode")){
-			commands.add(getScriptFolderLocation() + IMAGE_PROCESSOR_SP_SCRIPT);
-		}else if(intent.equalsIgnoreCase("video")){
-			commands.add(getScriptFolderLocation() + IMAGE_PROCESSOR_VIDEO_SCRIPT);
+			commands.add(SCRIPT_FOLDER_LOCATION + IMAGE_PROCESSOR_SP_SCRIPT);
 		}else{
 			throw new Exception("Received unknown intent " + intent);
 		}
 		commands.add("-i");
 		commands.add(imageFilePath);
 		commands.add("-o");
-		commands.add(getImageDumpLocation());
+		commands.add(IMAGE_DUMP_LOCATION);
 
 		logger.info("Executing script with commands: " + commands);
 
@@ -153,7 +149,7 @@ public class ImageProcessorService {
 
 	private JSONObject processResponseFile(String responseFileName, String sessionId) {
 		JSONObject responseJSON = null ;
-		File file = new File(getImageDumpLocation() + File.separator + responseFileName);
+		File file = new File(IMAGE_DUMP_LOCATION + File.separator + responseFileName);
 
 
 		if (file.exists()) {
@@ -222,31 +218,25 @@ public class ImageProcessorService {
 		}
 	}
 
-	private String getFileName(String fileName, String sessionId, String type, String fileExtension) {
+	private String getFileName(String fileName, String sessionId, String type) {
 		if (type.equalsIgnoreCase("input")) {
-			return fileName + "_" + sessionId + fileExtension;
+			return fileName + "_" + sessionId + IMAGE_EXTENSION;
 		} else if (type.equalsIgnoreCase("output")) {
-			return fileName + "_" + sessionId + fileExtension;
+			return fileName + "_" + sessionId + JSON_EXTENSION;
+
 		}else {
 			return "";
 		}
 	}
-  
+
 	private void checkDumpLocation() {
-		File imageRepo = new File(scriptPath + IMAGE_FOLDER);
+		File imageRepo = new File(IMAGE_FOLDER);
 		if (!imageRepo.exists()) {
 			imageRepo.mkdir();
 		}
 	}
-	
-	private String getScriptFolderLocation(){
-		return scriptPath + SCRIPT_FOLDER_LOCATION;
-	}
-	
-	private String getImageDumpLocation(){
-		return scriptPath + IMAGE_DUMP_LOCATION;
-	}
-	
+
+
 	private void cleanUp(String fileName1, String fileName2) {
 		File inputFile = new File(fileName1);
 		File outputFile = new File(fileName2);
@@ -256,7 +246,7 @@ public class ImageProcessorService {
 			inputFile = null;
 		}
 
-		if(outputFile.exists()) {
+		if (outputFile.exists()) {
 			outputFile.delete();
 			outputFile = null;
 		}
@@ -266,3 +256,4 @@ public class ImageProcessorService {
 
 
 }
+>>>>>>> master

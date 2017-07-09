@@ -20,6 +20,7 @@ args = parser.parse_args()
 
 
 fault_sp_script = os.environ.get('WORKSPACE_IMAGE')+'/image_processor_app/src/main/resources/find_sp_fault.py'
+fault_sp_script = "find_sp_fault.py"
 imgFolder = "imgFolder"
 
 if not os.path.exists(imgFolder):

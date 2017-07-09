@@ -19,8 +19,7 @@
     text-align: right;
     color: #fff;
     background: transparent url('../images/loading.gif') top left no-repeat;
-    border: none;
-}
+    background: transparent url('../img/loading.gif') top left no-repeat;
 
 .file-object {
     margin: 0 0 -5px 0;
