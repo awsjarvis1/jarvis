@@ -77,6 +77,8 @@ class LogAnalytics:
 
         return newconfigfilepath
 
+    def GetResponseForDriveErrorCode(self, errorcode):
+        if(errorcode == "0x22d0006"):
 	    return("(Activate timer expired.)\nRecommendation: Please remove the drive from the slot and re-insert it. It should fix the issue")
 	elif(errorcode == "0x2600003"):
             return("(Media error threshold exceeded.)\nRecommendation: Drive needs to be replaced. Please log a service ticket to get it replaced.")

@@ -31,3 +31,4 @@ if __name__=="__main__":
 	#print the time after the json has been dumped into postgres db
 
 	print 'End time PASSED'
+
