@@ -39,7 +39,7 @@ public class ImageProcessorService {
 	
 	private static final String JSON_EXTENSION = "_response.json";
 	private final String SCRIPT_FOLDER_LOCATION = "/image_processor_app/src/main/resources/";
-	private final String IMAGE_DUMP_LOCATION = "/image_processor_app/images";
+	private final String IMAGE_DUMP_LOCATION = "images";
 	private final String IMAGE_FOLDER = "images";
 
 	public JSONObject processFile(MultipartFile file, String sessionId, String intent) throws Exception{
