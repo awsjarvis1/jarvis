@@ -1,0 +1,83 @@
+{
+  "templates": [
+    "System performance has degraded",
+    "System is showing slowness",
+    "System is stuck",
+    "My application is running slow",
+    "My application get hung"
+  ],
+  "userSays": [
+    {
+      "data": [
+        {
+          "text": "System performance has degraded"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "System is showing slowness"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "System is stuck"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "My application is running slow"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "data": [
+        {
+          "text": "My application get hung"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }    
+  ],
+  "name": "log_analytics",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "GetSystem",
+      "affectedContexts": [],
+      "parameters": [        
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "speech": "Please upload Data collects. Bot will analyze DC and provide solution"
+        }
+      ]
+    }
+  ],
+  "priority": 500000,
+  "cortanaCommand": {
+    "navigateOrService": "NAVIGATE",
+    "target": ""
+  },
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

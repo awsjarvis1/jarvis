@@ -8,16 +8,32 @@ form {
 .b-agent-demo {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
-  width: 100%;
+  /*width: 100%;*/
   height: auto;
   color: #2b313f;
   font-size: 12px;
   overflow: hidden;
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 40px;
+  bottom: 55px;
   left: 0;
   right: 0;
+  background: white;
+
+  height: 100%;
+  min-height: 50%;
+    
+}
+.b-agent-demo-div {
+ 
+  position: absolute;
+  top: 5px;
+  bottom: 95px;
+  left: 0;
+  right: 0;
+  background: white;
+  overflow-y:auto;
+      
 }
 .b-agent-demo .user-request,
 .b-agent-demo .server-response {
@@ -28,7 +44,7 @@ form {
   margin-bottom: 5px;
   font-size: 14px;
   clear: both;
-  
+  max-width:350px;
 }
 .b-agent-demo .user-request.server-response-error,
 .b-agent-demo .server-response.server-response-error {
@@ -40,6 +56,7 @@ form {
   margin-right:5px;
   margin-top: 5px;
   margin-left:5px;
+  max-width:350px;
 }
 .b-agent-demo .server-response {
   color: white;
@@ -48,18 +65,20 @@ form {
   margin-top: 5px;
   margin-right: 5px;
   margin-left: 5px;
+  max-width:350px;
 }
 .b-agent-demo .b-agent-demo_result {
   overflow-y: auto;
   background: white;
   position: fixed;
-  top: 5px;/*110px;*/
+  top: 300px;/*110px;*/
   bottom: 55px;
-  width: 100%;
+  /*width: 100%;*/
+    
 }
 .b-agent-demo .b-agent-demo_result-table {
   height: 100%;
-  min-height: 100%;
+  min-height: 50%;
   width: 100%;
 }
 .b-agent-demo .b-agent-demo_result-table td {
@@ -71,7 +90,7 @@ form {
   overflow: hidden;
   position: fixed;
   top: 0;
-  width: 100%;
+  /*width: 100%;*/
   background-color: #2b303e;
   display: table;
 }
@@ -92,8 +111,8 @@ form {
   text-align: center;
 }
 .b-agent-demo .b-agent-demo_header-icon img {
-  max-height: 100%;
-  max-width: 100%;
+  /*max-height: 100%;*/
+  /*max-width: 100%;*/
   width: auto;
   height: auto;
   position: absolute;
@@ -132,15 +151,16 @@ form {
   height: 55px;
   border-top: 1px solid lightgray;
   background-color: white;
-  width: 100%;
+ 
 }
 .b-agent-demo #agentDemoForm {
   display: block;
   margin-left: 5px;
   margin-right: 5px;
+  
 }
 .b-agent-demo #speech {
-  width: 100%;
+  /*width: 100%;*/
   border: 0;
   font-size: 16px;
   font-weight: 300;
@@ -207,7 +227,7 @@ form {
       left: 50%;
       -webkit-transform: translate(-50%, -50%);
     }
-    input {
+    .inputtextchat {
       /*background-color: #126077;
       border: 1px solid #3F7F93;*/
       color: #000000;
@@ -215,7 +235,7 @@ form {
       /*font-size: 20px;*/
       line-height: 43px;
       padding: 0 0.75em;
-      width:88%;
+      width:298px;
       -webkit-transition: all 0.35s ease-in;
     }
     textarea1 {
@@ -226,10 +246,10 @@ form {
       width: 100%;
       -webkit-transition: all 0.35s ease-in;
     }
-    /*input:active, input:focus, textarea:active, textarea:focus {
+    input:active, input:focus, textarea:active, textarea:focus {
       outline: 1px solid #48788B;
-    }*/
-    .btn {
+    }
+    .btn1 {
       /*background-color: #126178;*/
       border: 1px solid #549EAF;
       color: #549EAF;
@@ -244,7 +264,7 @@ form {
       text-transform: uppercase;
       -webkit-transition: all 0.35s ease-in;
     }
-    .btn:hover {
+    .btn1:hover {
       background-color: #1888A9;
       color: #183035;
     }
@@ -271,20 +291,22 @@ form {
       max-height: 0;
       overflow: hidden;
       -webkit-transition: all 0.35s ease-in;
+      max-width:350px;
     }
     .spoken-response.is-active {
-      max-height: 400px;
+      max-height: 200px;
+       max-width:350px;
     }
     .scrollDown{
       vertical-align: middle;
     }
     .spoken-response__text {
-    
+      max-width:350px;
       color: #000000; /*#7584A2;*/
       padding: 1em;
     }
     .user-request__text {
-     
+      max-width:350px;
       color:#000000; /*#7584A2;*/
       padding: 1em;
     }
@@ -300,7 +322,7 @@ form {
   a:hover {
     color:#33F;
   }
-  .button {
+  .button1 {
     background: -webkit-linear-gradient(top,#008dfd 0,#0370ea 100%);
     border: 1px solid #076bd2;
     border-radius: 3px;

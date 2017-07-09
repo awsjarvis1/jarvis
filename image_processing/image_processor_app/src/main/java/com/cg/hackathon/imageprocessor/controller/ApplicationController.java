@@ -10,7 +10,6 @@ import org.apache.commons.io.IOUtils;
 
 import org.json.JSONObject;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +36,7 @@ import com.cg.hackathon.imageprocessor.service.ImageProcessorService;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class ApplicationController {
 
@@ -96,7 +97,6 @@ public class ApplicationController {
 	@RequestMapping(value = "/status", produces = "text/plain; charset=utf-8")
 	public ResponseEntity<?> appstatus() {
 		logger.debug("Request for micro service status");
-
 		String statusStr = "Service Description: This microservice processes an image to find out the abnormalities related to the array";
 		HttpHeaders responseHeader = new HttpHeaders();
 		try {
@@ -115,21 +115,15 @@ public class ApplicationController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/imageprocessor/receiveFile")
 	public ResponseEntity<?> getImageProcessorResponse(@RequestParam("file") MultipartFile file,
-
 			@RequestParam("sessionId") String sessionId, @RequestParam("intent") String intent) throws Exception {
 
-
 		HttpHeaders responseHeader = new HttpHeaders();
-
 		try {
 			logger.info("Received request with image file name :" + file.getOriginalFilename() + ",  size : "
 					+ file.getSize());
-
 			setImageProcessorServiceInstance();
 
-
 			JSONObject responseJSON = imageProcessorService.processFile(file, sessionId, intent);
-
 			if (responseJSON == null) {
 
 				logger.error("Could not process image");
@@ -137,7 +131,6 @@ public class ApplicationController {
 				return new ResponseEntity<>("Could not process image. Cannot proceed", responseHeader,
 						HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-
 			responseHeader.set("200", "SUCCESS");
 
 			return new ResponseEntity<>(responseJSON.toString(), responseHeader, HttpStatus.OK);
@@ -151,38 +144,30 @@ public class ApplicationController {
 	}
 
 
-	@RequestMapping(value = "/api/imageprocessor/getImage")
-
-       public ResponseEntity<?> getImages(@RequestParam("fileName") String fileName) throws Exception{
-
-
-              HttpHeaders responseHeader = new HttpHeaders();
-
-              InputStream is = null;
-
-              try {
-
-                     logger.info("Received request to upload file with name : " + fileName);
- 		     
-                     setImageProcessorServiceInstance();
-                     File file = imageProcessorService.getImageFile(fileName);
-                     is = new FileInputStream(file);
-                     responseHeader.set("200", "SUCCESS");
-                     return new ResponseEntity<>(IOUtils.toByteArray(is), responseHeader, HttpStatus.OK);
-
-              } catch (Exception e) {
-                     logger.error("Received exception while attempting to return image to GUI: " + e.getMessage());
-                     responseHeader.set("500", "Unexpected Error");
-                     return new ResponseEntity<>("Could not return image to GUI", responseHeader,
-                                  HttpStatus.INTERNAL_SERVER_ERROR);
-              } finally {
-                     logger.info("Attempting to close input stream for image ");
-                     if (is != null) {
-                           is.close();
-                           is = null;
-                     }
-              }
-       }
+    @RequestMapping(value = "/api/imageprocessor/getImage")
+    public ResponseEntity<?> getImages(@RequestParam("fileName") String fileName) throws Exception{
+        HttpHeaders responseHeader = new HttpHeaders();
+        InputStream is = null;
+        try {
+            logger.info("Received request to upload file with name : " + fileName);
+            setImageProcessorServiceInstance();
+            File file = imageProcessorService.getImageFile(fileName);
+            is = new FileInputStream(file);
+            responseHeader.set("200", "SUCCESS");
+            return new ResponseEntity<>(IOUtils.toByteArray(is), responseHeader, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Received exception while attempting to return image to GUI: " + e.getMessage());
+            responseHeader.set("500", "Unexpected Error");
+            return new ResponseEntity<>("Could not return image to GUI", responseHeader,
+												HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            logger.info("Attempting to close input stream for image ");
+            if (is != null) {
+                is.close();
+                is = null;
+             }
+        }
+    }
 
 	private void setImageProcessorServiceInstance() {
 		imageProcessorService = beanFactory.getBean(ImageProcessorService.class);
