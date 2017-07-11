@@ -14,7 +14,7 @@ form {
   font-size: 12px;
   overflow: hidden;
   position: absolute;
-  top: 40px;
+  top: 70px;
   bottom: 55px;
   left: 0;
   right: 0;
@@ -28,7 +28,7 @@ form {
  
   position: absolute;
   top: 5px;
-  bottom: 95px;
+  bottom: 123px;
   left: 0;
   right: 0;
   background: white;
@@ -392,8 +392,8 @@ form {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 58px;
+  height: 30px;
 }
 
 /* Hide default HTML checkbox */
@@ -403,10 +403,10 @@ form {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
+  top: 0px;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 5px;
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
@@ -419,7 +419,8 @@ form {
   height: 26px;
   width: 26px;
   left: 4px;
-  bottom: 4px;
+  bottom: 0px;
+  top:0px;
   background-color:transparent;
   -webkit-transition: .4s;
   transition: .4s;
@@ -427,11 +428,11 @@ form {
 }
 
 input:checked + .slider {
-  background-color:green; /*#2196F3;*/
+  background-color:greenyellow; /*#2196F3;*/
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px green; /*#2196F3;*/
+  box-shadow: 0 0 1px greenyellow; /*#2196F3;*/
 }
 
 input:checked + .slider:before {

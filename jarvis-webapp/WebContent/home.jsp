@@ -112,6 +112,94 @@
         noscript h1 {
             padding: 20px;
         }
+        a:link {
+    color:#000;
+    text-decoration: none;
+  }
+  a:visited {
+    color:#000;
+  }
+  a:hover {
+    color:#33F;
+  }
+  .button {
+    background: -webkit-linear-gradient(top,#008dfd 0,#0370ea 100%);
+    border: 1px solid #076bd2;
+    border-radius: 3px;
+    color: #fff;
+    display: none;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.3;
+    padding: 8px 25px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #076bd2;
+    letter-spacing: normal;
+  }
+  .center {
+    padding: 10px;
+    text-align: center;
+  }
+  .final {
+    color: black;
+    padding-right: 3px; 
+  }
+  .interim {
+    color: gray;
+  }
+  .info {
+    font-size: 14px;
+    text-align: center;
+    color: #777;
+    display: none;
+  }
+  .right {
+    float: right;
+  }
+  .sidebyside {
+    display: inline-block;
+    width: 45%;
+    min-height: 40px;
+    text-align: left;
+    vertical-align: top;
+  }
+  #headline {
+    font-size: 40px;
+    font-weight: 300;
+  }
+  #info {
+    font-size: 20px;
+    text-align: center;
+    color: #777;
+    visibility: hidden;
+  }
+  #results {
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+    min-height: 150px;
+  }
+  #start_button {
+    border: 0;
+    background-color:transparent;
+    padding: 0;
+  }
+  .select {
+    -webkit-appearance: menulist;
+    box-sizing: border-box;
+    align-items: center;
+    white-space: pre;
+    -webkit-rtl-ordering: logical;
+    color: black;
+    background-color: white;
+    cursor: default;
+    border-width: 1px;
+    border-style: solid;
+    border-color: initial;
+    border-image: initial;
+}
     </style>
     <!--[if lte IE 7]>
     <script src="https://console.api.ai/api-client/js/agentDemoApp/promise.min.js"></script>
@@ -134,21 +222,28 @@
         }
         .imagePreview {
             width: 180px;
-            height: 180px;
+            height: 150px;
             background-position: center center;
             background-size: cover;
             -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
             display: inline-block;
+            margin-bottom: 10px;
+        }
+        .respimage
+        {
+            width:600px;
+            height:500px;
+            padding-left:10px;
         }
 
     </style>
 
-    <link rel="stylesheet" type="text/css" href="css/dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="css/Dashboard.css" />
     <link rel="stylesheet" type="text/css" href="content/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/Product.css" />
     <link rel="stylesheet" type="text/css" href="css/Site.css" />
     <link rel="stylesheet" type="text/css" href="css/icons.css" />
-    <link rel="stylesheet" type="text/css" href="css/configuration.css" />
+    <link rel="stylesheet" type="text/css" href="css/Configuration.css" />
     <link rel="stylesheet" type="text/css" href="css/SiteManager.css" />
     <link rel="stylesheet" type="text/css" href="css/Help.css" />
     <link rel="stylesheet" type="text/css" href="css/LicenseDisclaimer.css" />
@@ -172,10 +267,11 @@
     <script language="javascript" type="text/javascript" src="js/Product.js"></script>
     <script language="javascript" type="text/javascript" src="js/Site.js"></script>
     <script language="javascript" type="text/javascript" src="js/SiteManager.js"></script>
-    <script language="javascript" type="text/javascript" src="js/plugins/sortable.js"></script>
+    <script language="javascript" type="text/javascript" src="js/plugins/sortable.min.js"></script>
     <script language="javascript" type="text/javascript" src="js/fileinput.js"></script>
     <script>
         var elementList = "";
+        var msgcounter=0;
     </script>
     
     
@@ -186,10 +282,15 @@
                 $('#qnimate').addClass('popup-box-on');
                 $('#qnimateButton').removeClass('popup-box-on');
                 $('#pnlEnvironmentData').addClass('panel-width855');
-
+                if(msgcounter==0)
+                {
                 respond("Hi " + document.getElementById("hdnusername").innerHTML + ";  Welcome!!!");
                 respond("I can assist you on drive failure, lun not visible, sp in service mode and CLI commands related to Unity and VNX");
                 respond("How can I help you ?");
+                msgcounter+=1;
+                respond("Click the microphone icon to enable speaking conversation.");               
+            }
+            
             });
 
             $("#removeClass").click(function () {
@@ -204,9 +305,14 @@
                 $('#hamburgerIcon').toggleClass("active");
                 $('#qnimateButton').removeClass('popup-box-on');
                 $('#pnlEnvironmentData').addClass('panel-width855');
+                if(msgcounter==0)
+                {
                 respond("Hi " + document.getElementById("hdnusername").innerHTML + ";  Welcome!!!");
                 respond("I can assist you on drive failure, lun not visible, sp in service mode,image processing, log analytics and CLI commands related to Unity and VNX.");
                 respond("How can I help you ?");
+                msgcounter+=1;
+                respond("Click the microphone icon to enable speaking conversation.");   
+                }
 
             });
 
@@ -222,7 +328,7 @@
                     }
                 }
                 
-                var strwebhookurl = "http://ec2-18-220-11-119.us-east-2.compute.amazonaws.com:8081";
+                var strwebhookurl = "http://13.59.160.130:8081";
 
                 if (document.getElementById("hdnwebhookurl") != null && document.getElementById("hdnwebhookurl").innerHTML != "" && document.getElementById("hdnwebhookurl").innerHTML != null && document.getElementById("hdnwebhookurl").innerHTML != '&lt;%= session.getAttribute("webhook_url") %&gt;') {
                     strwebhookurl = document.getElementById("hdnwebhookurl").innerHTML;
@@ -245,7 +351,7 @@
                     },
                     data: {},
                     success: function (data) {
-                        
+                         
                         //var logresponse = JSON.parse(data.response);
                         document.getElementById("spnsr").innerText = "";
                         document.getElementById("spnsr").innerText += "\n" + "srNo" + "    " + "problemType" + "    " + "reportedBy" + "    " + "date" + "    " + "product";
@@ -254,7 +360,9 @@
                             document.getElementById("spnsr").innerText += "\n" + data.serviceRequest[i].srNo + "    " + data.serviceRequest[i].problemType + "    " + data.serviceRequest[i].reportedBy + "    " + data.serviceRequest[i].date + "    " + data.serviceRequest[i].product;
                             
                         }
-                        
+                                                                          
+                       location.hash = "srpage2";
+                       
                         //printmessage_response("List of SR#  " + JSON.parse(data.serviceRequest[0].srNo));
                     },
                     error: function (data) {
@@ -264,8 +372,8 @@
 
                 });
 
-
-
+                       
+                        
                 
 
             });
@@ -304,7 +412,7 @@
                             <a href="home.jsp">
                                 <!--<img src="~/images/dell_emc_logo.png" alt="DELL EMC Logo" height="30" width="171" style="padding-right:15px;" />-->
                                 <img src="images/jarvis.jpg" alt="Jarvis Logo" height="35" width="50" style="padding-right:15px;" />
-                                Jarvis - Remote Data Center Operation <small>v0.3</small>
+                                Jarvis - Remote Data Center Operation <small>v1.0</small>
                             </a>
                         </h3>
                     </nav>
@@ -353,7 +461,7 @@
                                 <!--@Html.ActionLink("Help", "Index", "Help",
                             null, null, "", null, new { @class = "icon help-icon" }
                             )-->
-                                <a class="icon help-icon" href="#" id="viewsr">View Service Request(SR)</a>
+                            <a class="icon help-icon"  id="viewsr" style="cursor: pointer;">View Service Request(SR)</a>
                             </li>
                             <li>
                                 <a class="icon chat-icon" href="#" id="addClassChat">Open in chat</a>
@@ -368,7 +476,7 @@
 
 
                         <div id="pnlEnvironmentData" class="panel panel-primary">
-                            <div data-collapsed="true" class="panel-heading animate clickable" data-toggle="collapse" href="#powerSummaryPanel">
+                            <div data-collapsed="true" class="panel-heading animate clickable" data-toggle="collapse" href="#powerSummaryPanel2">
                                 <h3 class="panel-title">
                                     Dashboard
                                     <span class="fa fa-angle-double-down fa-2x pull-right"></span>
@@ -380,13 +488,13 @@
                                 <div class="panel-group">
 
                                     <div class="panel panel-primary collapsible">
-                                        <div class="panel-heading clickable animate" data-toggle="collapse" href="#powerSummaryPanel">
+                                        <div class="panel-heading clickable animate" data-toggle="collapse" href="#powerSummaryPanel3">
                                             <h4 class="panel-title">
                                                 Upload File (img/txt/log)
                                                 <span class="fa fa-chevron-up fa-lg fa-rotate-180 animate pull-right"></span>
                                             </h4>
                                         </div>
-                                        <div id="powerSummaryPanel" class="panel-collapse ">
+                                        <div id="powerSummaryPanel3" class="panel-collapse ">
                                             <div class="panel-body">
                                                 <div class="container-fluid">
                                                     <div class="row">
@@ -408,13 +516,13 @@
                                                                                      <td>
                                                                                          <label>Upload File : </label>
                                                                                      </td>
-                                                                                     <td> <input type="checkbox" id="chksp" /><input type="checkbox" id="chkloganalytics" /></td>
-                                                                                     <td style="padding-left:20px;">
+                                                                                     <td> <input type="checkbox" id="chksp" style="visibility:hidden" /><input type="checkbox" id="chkloganalytics" style="visibility:hidden" /></td>
+                                                                                     <td style="padding-left:5px;">
                                                                                          <input id="file-3" type="file" data-overwrite-initial="false" multiple />
                                                                                      </td>
                                                                                      <td style="padding-left:20px;">
                                                                                          <input type="button" id="btnupload" value="Upload" class="btn btn-primary btn-md"/>
-                                                                                         <a name="summarypage"></a>
+                                                                                        
                                                                                      </td>
                                                                                      </tr>
                                                                                  </tbody>
@@ -448,7 +556,7 @@
                                                                         allowedFileExtensions: ['jpg', 'png', 'gif', 'txt', 'log', 'mp4', 'flv', 'mkv', 'wmv'],
                                                                         fileType: "any",
                                                                         previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
-                                                                        maxFileSize: 10240,
+                                                                        //maxFileSize: 10240,
                                                                         maxFilesNum: 2,
                                                                         overwriteInitial: false,
                                                                         initialPreviewAsData: true,
@@ -508,6 +616,29 @@
                                                                         return false;
                                                                     });
 
+                                                                    for (var i = 0; i < langs.length; i++) {
+                                                                    select_language.options[i] = new Option(langs[i][0], i);
+                                                                    }
+                                                                    select_language.selectedIndex = 6;
+                                                                    updateCountry();
+                                                                    select_dialect.selectedIndex = 2;
+                                                                    
+
+                                                                   
+                                                                
+
+                                                                ///////////////////////////Voice//////////////////////////////////////
+
+                                                                            
+
+                                                                            
+
+
+
+
+
+
+                                                                ////////////////////////////////////////////////////////////////
 
 
                                                                 });
@@ -539,7 +670,7 @@
                                                                     var producttype="";
 
                                                                     $("body").on("click", "#btnupload", function (e) {
-                                                                        
+                                                                     clearsummary();
                                                                      e.preventDefault();
                                                                      previewImage(filesuploaded);
                                                                      });
@@ -568,6 +699,20 @@
 
                                                                     }, false);
 
+                                                                    function clearsummary()
+                                                                    {
+                                                                                                                                                 
+                                                                        document.getElementById("divprocessedimage").style.display="none";
+
+                                                                        document.getElementById("spnsummary").innerText="";
+
+                                                                        document.getElementById("spnsummarylog").innerText="";
+
+                                                                        document.getElementById("spnsummary").innerText="View image summary here";
+
+                                                                        document.getElementById("spnsummarylog").innerText="View log analytics summary here";
+
+                                                                    }
 
                                                                     function previewImage(files) {
                                                                         location.hash = 'summarypage';
@@ -643,7 +788,7 @@
 
                                                                                 //alert("called ajax");
 
-                                                                                var strimageurl = "http://ec2-52-15-39-48.us-east-2.compute.amazonaws.com:5001";
+                                                                                var strimageurl = "http://ec2-13-59-239-56.us-east-2.compute.amazonaws.com:5001";
                                                                                 
                                                                                 if (document.getElementById("hdnimageurl").innerHTML != "" && document.getElementById("hdnimageurl").innerHTML != null && document.getElementById("hdnimageurl").innerHTML != '&lt;%= session.getAttribute("image_url") %&gt;')
                                                                                 {
@@ -686,9 +831,9 @@
                                                                                         var imageresponse = JSON.parse(xhr.responseText);
 
                                                                                        
-
-                                                                                        document.getElementById("spnsummary").innerText = "Image File uploaded successfully. Image successfully processed and receivd response as: \n" + imageresponse.response_text +"\n \n=============================================================================";
-                                                                                        respond("Image File uploaded successfully. Image successfully processed and receivd response as: \n" + imageresponse.response_text);
+                                                                                        location.hash = 'summarypage2';
+                                                                                        document.getElementById("spnsummary").innerText = "Image File uploaded successfully. Image successfully processed and received response as: \n" + imageresponse.response_text +"\n \n===============================================================================";
+                                                                                        respond("Image File uploaded successfully. Image successfully processed and received response as: \n" + imageresponse.response_text);
                                                                                         document.getElementById("spnsummary").style.color = "green";
                                                                                         document.getElementById("divProcessing").style.display = "none";
                                                                                                                                                                                
@@ -709,12 +854,17 @@
 
                                                                                         }
                                                                                         document.getElementById("divprocessedimage").style.display = "block";
+                                                                                        document.getElementById("imgprocessedimage").style.display = "block";
                                                                                         document.getElementById("imgprocessedimage").src = strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username;
                                                                                         //preview_images( strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username)
                                                                                         
-                                                                                        respond("<div class='col-md-3'><img class='imagePreview' src='" + strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username + "' ></div>");
-
-                                                                                    }
+                                                                                        //respond("<div class='col-md-3'><img class='imagePreview' src='" + strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username + "' ></div>");
+                                                                                        //respond("<div class='col-md-3'><img class='img-responsive' src='"+strimageurl+"'></div>");
+                                                                                       // respond('<img id="requestimage" class="img-responsive" src='+ strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username +" data-original="+strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username +' alt=""/>');
+                                                                                       respond('<div id="imageviewer"><div class="row"><div class="docs-galley"><ul class="docs-pictures clearfix">'+'<img id="responseimage" class="img-responsive" src='+ strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username +" data-original="+strimageurl + "/api/imageprocessor/getImage?fileName=" + imageresponse.response_image + "&sessionId=" + sessionid + "-" + username +' alt=""/>'+ '</ul></div></div><footer class="docs-footer"></footer><script src="js/viewer.js"/>'+'<script src="js/main.js"/></div>'+"Click image to maximize.Press Escape to Cancel.");
+                                                                                
+                                                                            
+                                                                                      }
                                                                                     else {
 
                                                                                         //var imageresponse = JSON.parse(xhr.responseText);
@@ -807,7 +957,7 @@
                                                                             producttype = "Unity";
                                                                         }
                                                                         //alert(intent);
-                                                                        var strlogurl = "http://ec2-13-59-170-182.us-east-2.compute.amazonaws.com:5000";
+                                                                        var strlogurl = "http://ec2-52-14-184-122.us-east-2.compute.amazonaws.com:5000";
 
                                                                         if (document.getElementById("hdnlogurl").innerHTML != "" && document.getElementById("hdnlogurl").innerHTML != null && document.getElementById("hdnlogurl").innerHTML != '&lt;%= session.getAttribute("log_url") %&gt;')
                                                                         {
@@ -854,11 +1004,13 @@
                                                                                     respond("Log File uploaded successfully.\n" + logresponse.result);
                                                                                     document.getElementById("spnsummarylog").style.color = "green";
                                                                                     document.getElementById("divProcessing").style.display = "none";
+
+                                                                                    location.hash = 'summarypage3';
                                                                                 }
                                                                                 
-                                                                                if ((logresponse.result.toString().search("failed due to") >= 0 || logresponse.result.toString().search("Unable to root cause") >= 0 || logresponse.result.toString().search("create service request") >= 0) && producttype!="")
+                                                                                if (( logresponse.result.toString().search("Miniport_Slowness issue") >=0 ||  logresponse.result.toString().search("failed due to") >= 0 || logresponse.result.toString().search("Unable to root cause") >= 0 || logresponse.result.toString().search("create service request") >= 0) && producttype!="")
                                                                                 {
-                                                                                    var strwebhookurl="http://ec2-18-220-11-119.us-east-2.compute.amazonaws.com:8081";
+                                                                                    var strwebhookurl="http://13.59.160.130:8081";
                                                                                     
                                                                                     if (document.getElementById("hdnwebhookurl") != null && document.getElementById("hdnwebhookurl").innerHTML != "" && document.getElementById("hdnwebhookurl").innerHTML != null && document.getElementById("hdnwebhookurl").innerHTML != '&lt;%= session.getAttribute("webhook_url") %&gt;') {
                                                                                         strwebhookurl = document.getElementById("hdnwebhookurl").innerHTML;
@@ -878,7 +1030,7 @@
                                                                                         data: {},
                                                                                         success: function (data) {
                                                                                             //alert(data);
-                                                                                            document.getElementById("spnsummarylog").innerText += "\n \n A Service request (SR) has been generated. Please refer SR#  " + data;
+                                                                                            document.getElementById("spnsummarylog").innerText += "\n A Service request (SR) has been generated. Please refer SR#  " + data;
                                                                                             respond("A Service request (SR) has been generated. Please refer SR#  " + data);
                                                                                         },
                                                                                         error: function (data) {
@@ -937,20 +1089,22 @@
                                                                     var messageInternalError = "Oh no, there has been an internal server error";
                                                                     var messageSorry = "I'm sorry, I don't have the answer to that yet.";
 
-
+                                                                    
                                                                     function startRecognition() {
                                                                         
                                                                         recognition = new webkitSpeechRecognition();
                                                                         
-                                                                        recognition.continuous = false;
+                                                                        recognition.continuous = true;
                                                                         recognition.interimResults = false;
-
+                                                                       
+                                                                        
                                                                         recognition.onstart = function (event) {
                                                                            
                                                                             
                                                                             //respond(messageRecording);
                                                                             updateRec();
                                                                         };
+                                                                        var final_transcript = '';
                                                                         recognition.onresult = function (event) {
                                                                            
                                                                             recognition.onend = null;
@@ -960,14 +1114,46 @@
                                                                                 text += event.results[i][0].transcript;
                                                                             }
                                                                             setInput(text);
-                                                                            stopRecognition();
+                                                                            //stopRecognition();
+
+                                                                            // var interim_transcript = '';
+                                                                            //     for (var i = event.resultIndex; i < event.results.length; ++i) {
+                                                                            //     if (event.results[i].isFinal) {
+                                                                            //         final_transcript += event.results[i][0].transcript;
+                                                                            //     } else {
+                                                                            //         interim_transcript += event.results[i][0].transcript;
+                                                                            //     }
+                                                                            //     }
+                                                                            //     final_transcript = capitalize(final_transcript);
+                                                                            //     final_span.innerHTML = linebreak(final_transcript);
+                                                                            //     interim_span.innerHTML = linebreak(interim_transcript);
+                                                                            //     //$speechInput.val(linebreak(interim_transcript));
+
+
+
+
                                                                         };
+                                                                        var two_line = /\n\n/g;
+                                                                        var one_line = /\n/g;
+                                                                        function linebreak(s) {
+                                                                        return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+                                                                        }
+
+                                                                        var first_char = /\S/;
+                                                                        function capitalize(s) {
+                                                                        return s.replace(first_char, function(m) { return m.toUpperCase(); });
+                                                                        }
                                                                         recognition.onend = function () {
                                                                             respond(messageCouldntHear);
                                                                             stopRecognition();
                                                                         };
-                                                                        recognition.lang = "en-US";
-                                                                        recognition.start();
+                                                                        // recognition.onsoundend=function(){alert("onsoundend")};
+                                                                        // recognition.onaudioend=function(){alert("onaudioend")};
+                                                                        // recognition.onspeechend=function(){alert("onspeechend")};
+
+                                                                        //recognition.lang = "en-US";
+                                                                         recognition.lang = select_dialect.value;
+                                                                         recognition.start();
                                                                     }
 
                                                                     function clearchat()
@@ -1043,10 +1229,55 @@
 																		
 
                                                                         var text = $speechInput.val();
-																		
+                                                                        text=text.trim();
+
+                                                                        if(text=="clear"|| text=="refresh" || text=="clear the chat bot" || text=="refresh the chat bot" || text=="please clear the chat bot" || text=="please refresh the chat bot" || text=="can you please clear the chat bot" || text=="can you please refresh the chat bot")
+                                                                        {
+                                                                           printmessage_request(text);
+
+                                                                           clearchat();
+                                                                          respond("conversations cleared");
+                                                                           $speechInput.val("");
+                                                                        }
+                                                                        else if(text=="stop" || text=="stop listening" || text=="stop microphone" || text=="stop micro phone" ||text=="stop the microphone" || text=="please stop the microphone" || text=="can you please stop the microphone" || text=="could you please stop the microphone" || text=="switch off microphone" || text=="please switch off the microphone" || text=="switch off the microphone" || text=="switch off the microphone" || text=="please switch off the microphone" )
+                                                                        {
+                                                                            printmessage_request(text);
+                                                                            stopRecognition();
+                                                                            respond("microphone stopped");
+                                                                            $speechInput.val("");
+                                                                           
+                                                                        }
+                                                                        else if(text=="stop audio" || text=="stop speaker" || text=="stop speaking" || text=="disable audio" || text=="disable speaker" || text=="disable speaking" || text=="switch off audio" || text=="please switch off the audio" || text=="switch off the audio" || text=="switch off the speaker" || text=="please switch off the speaker" )
+                                                                        {
+                                                                             printmessage_request(text);
+                                                                            document.getElementById("chkspeaker").checked=false;
+                                                                            //window.speechSynthesis.speak("");
+                                                                             respond("chat bot speaker muted");
+                                                                            $speechInput.val("");
+                                                                            
+                                                                        }
+                                                                        else if(text=="enable audio" || text=="enable speaker" || text=="enable speaking" || text=="start audio" || text=="start speaker" || text=="start speaking")
+                                                                        {
+                                                                            printmessage_request(text);
+                                                                            document.getElementById("chkspeaker").checked=true;
+                                                                             respond("chat bot speaker enabled");
+                                                                            $speechInput.val("");
+                                                                            
+                                                                        }
+                                                                        else if(text=="can you please close the chat"||text=="can you please close the chatbot" || text=="can you please close the chat bot"||text=="please close chat"||text=="please close the chat" ||text=="please close the chat bot" || text=="please close the chatbot"|| text=="close chatbot" || text=="close chat bot" || text=="close chat" || text=="please close chat bot" || text=="please close the chatbot" || text=="please close the chat" || text=="close the chat window" || text=="close the chat bot")
+                                                                        {
+                                                                                                                                                      
+                                                                            printmessage_request(text);
+                                                                            $("#removeClass").click();
+                                                                            stopRecognition();
+                                                                            //clearchat();
+                                                                            respond("chat bot closed");
+                                                                            $speechInput.val("");
+                                                                        }
+                                                                         else
+                                                                        {
                                                                         printmessage_request(text);
-																		
-                                                                        $speechInput.val("");
+                                                                        //$speechInput.val("");
                                                                         $.ajax({
                                                                             type: "POST",
                                                                             url: baseUrl + "query?v=20150910",
@@ -1073,16 +1304,21 @@
 																				 {
 																				   intent="drive_failure";
 																				 }
-																				 else if(data.result.contexts[0].name.includes("spdownissue"))// || data.result.contexts[1].name.includes("spdownissue") || data.result.contexts[2].name.includes("spdownissue") || data.result.contexts[0].name.includes("spdownissue") || data.result.contexts[1].name.includes("spdownissue") || data.result.contexts[2].name.includes("spdownissue") || data.result.metadata.intentName.includes("spdownissue") )
+																				 if(data.result.contexts[0].name.includes("spdownissue"))// || data.result.contexts[1].name.includes("spdownissue") || data.result.contexts[2].name.includes("spdownissue") || data.result.contexts[0].name.includes("spdownissue") || data.result.contexts[1].name.includes("spdownissue") || data.result.contexts[2].name.includes("spdownissue") || data.result.metadata.intentName.includes("spdownissue") )
 																				 {
 																				  intent="sp_servicemode";
 																				 }
-																				 else if (data.result.contexts[0].name.includes("loganalytics"))
+																				 if (data.result.contexts[0].name.includes("log_analytics")|| data.result.metadata.intentName.includes("log_analytics") )
 																				 {
 																				     intent = "log_analytics";
 																				 }
 																				
 																				}
+                                                                                 var clearchatbot=data.result.parameters.clearchatbot;
+                                                                                if(clearchatbot=="yes" || clearchatbot=="yes please" || clearchatbot=="sure" || clearchatbot=="clear" || clearchatbot=="please clear" || clearchatbot=="please refresh")
+                                                                                {
+                                                                                  clearchat();
+                                                                                }
                                                                             },
                                                                             error: function (data) {
                                                                                 //alert(JSON.stringify(data, undefined, 2))
@@ -1090,7 +1326,7 @@
                                                                             }
 
                                                                         });
-
+                                                                        }
                                                                     }
 
                                                                     function prepareResponse(val) {
@@ -1141,13 +1377,15 @@
                                                                                 // Read my text
                                                                                 if (val != messageRecording) {
 
-                                                                                    var msg = new SpeechSynthesisUtterance();
-                                                                                    msg.text = val;
-                                                                                    //msg.voice=voices[3];
-                                                                                    msg.voiceURI = "native";
-                                                                                    msg.lang = "en-US";
-                                                                                    window.speechSynthesis.speak(msg);
-                                                                                    // alert( "index " + i + "Name "+ voices[i].name +" uri " +voices[i].uri);
+                                                                                    // var msg = new SpeechSynthesisUtterance();
+                                                                                    // msg.text = val;
+                                                                                    // //msg.voice=voices[3];
+                                                                                    // msg.voiceURI = "native";
+                                                                                    // msg.lang = "en-US";
+                                                                                    // window.speechSynthesis.speak(msg);
+                                                                                    // // alert( "index " + i + "Name "+ voices[i].name +" uri " +voices[i].uri);
+                                                                                   
+                                                                                    speak(val);
                                                                                 }
 
                                                                             }
@@ -1184,13 +1422,244 @@
                                                                         $("#resultWrapper").animate({
                                                                             scrollTop: $("#resultWrapper")[0].scrollHeight
                                                                         }, -500);
-
+                                                                        $speechInput.val("");
                                                                     }
+                                                                            var synthesizer = null;
+                                                                            var default_voiceURI = "native";
+                                                                            var default_lang = "en-US";
+                                                                            var voice=null;
+                                                                            var available_voices=null;
+                                                                            //u have to put speechSynthesis.getVoices() inside timer, beacuase without timer it returns a empty list. This is a bug in chrome.
+                                                                            var timer = setInterval(function(){
+                                                                                //window.speechSynthesis object contains information about speechSynthesis features available and also is used to control the SpeechSynthesisUtterance objects.
+                                                                                //extract all available voices
+                                                                                if("speechSynthesis" in window)
+                                                                                {
+                                                                                    //getVoices() gives a list of available human voices and their suitable language.
+                                                                                    available_voices = speechSynthesis.getVoices();
+
+                                                                                    //after running few times inside the timer callback the getVoices returns the list. Its also a bug.
+                                                                                    if(available_voices.length !== 0)
+                                                                                    {
+                                                                                        //available_voices.length returns the total number of voices available. Every voice is made for a particular language. Bad mix will produce bad pronouncation. 
+                                                                                        for(var count = 0; count < available_voices.length; count++)
+                                                                                        {
+
+                                                                                            //lang returns the langauage code for which the voice is made for.
+                                                                                            //voiceURI returns a unique identifier for that voice. 
+                                                                                            //voiceURI and lang come in pairs that means each voiceURI is trained for a particular language.
+                                                                                            //name is the displayable name for the voice.
+                                                                                            if(count == 0)
+                                                                                            {
+                                                                                                //we make the first voice as default.
+                                                                                                default_voiceURI = available_voices[count].voiceURI;
+                                                                                                default_lang = available_voices[count].lang;
+                                                                                                voice=available_voices[0];
+                                                                                            }
+
+                                                                                            document.getElementById("select_voice").innerHTML += "<option value='" + available_voices[count].lang + "' data-voice-uri='" + available_voices[count].voiceURI +  "'>"+ available_voices[count].name + "</option>";
+                                                                                        }
+                                                                                        clearInterval(timer);
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    alert("Speech Synthesis API not supported");
+                                                                                    clearInterval(timer);
+                                                                                }
+                                                                            }, 1);
+
+                                                                    function speak(val)
+                                                                            {
+                                                                                // var msg = new SpeechSynthesisUtterance();
+                                                                                //     msg.text = val;
+                                                                                //     //msg.voice=voices[3];
+                                                                                //     msg.voiceURI = "native";
+                                                                                //     msg.lang = "en-US";
+                                                                                //     window.speechSynthesis.speak(msg);
+                                                                                
+                                                                                
+                                                                                //if("SpeechSynthesisUtterance" in window)
+                                                                                {
+                                                                                    //select_voice();
+                                                                                    // synthesizer = new SpeechSynthesisUtterance();
+                                                                                    // synthesizer.text = text;//document.getElementById("text").value;
+                                                                                    // synthesizer.voice = default_voiceURI;
+                                                                                    // synthesizer.lang = default_lang;
+
+                                                                                    var msg = synthesizer = new SpeechSynthesisUtterance();
+                                                                                    msg.text = val;
+                                                                                    if(voice!=null && voice!=undefined)
+                                                                                    { msg.voice=voice;}
+                                                                                   
+                                                                                    msg.voiceURI = default_voiceURI;//"native";
+                                                                                    msg.lang = default_lang;
+                                                                                    
+                                                                                    msg.onstart = function(){
+                                                                                        //alert("Synthesis Started");
+                                                                                       
+                                                                                        if(recognition!=undefined && recognition!=null)
+                                                                                        { 
+                                                                                        recognition.stop();
+                                                                                        $start_img.attr('src', "images/mic.gif");
+                                                                                        }
+                                                                                    }
+
+                                                                                    msg.onend = function(){
+                                                                                        //alert("Synthesis Stopped");
+                                                                                        
+                                                                                        if(recognition!=undefined && recognition!=null)
+                                                                                        {                                                                                       
+                                                                                         recognition.start();
+                                                                                         $start_img.attr('src', "images/mic-animate.gif");
+                                                                                        }
+                                                                                    }
+
+                                                                            
+                                                                                    // alert( "index " + i + "Name "+ voices[i].name +" uri " +voices[i].uri);
+
+                                                                                    //represents how fast the text will be spoken out. Value between 0.1 to 10.
+                                                                                    //msg.rate = 1;
+
+                                                                                    //represents the pitch. Value between 0 to 2.
+                                                                                    //msg.pitch = 1;
+
+                                                                                    // //fired when synthesizer is started
+                                                                                    // synthesizer.onstart = function(){
+                                                                                    //     console.log("Synthesis Started");
+                                                                                    // }
+
+                                                                                    // //fired when synthesizer is paused
+                                                                                    // synthesizer.onpause = function(){
+                                                                                    //     console.log("Synthesis Paused");
+                                                                                    // }
+
+                                                                                    // //fired when synthesizer is resumed after pause
+                                                                                    // synthesizer.onresume = function(){
+                                                                                    //     console.log("Synthesis Resumed after Pause");
+                                                                                    // }
+
+                                                                                    // //fired when synthesizer is stopped
+                                                                                    // synthesizer.onend = function(){
+                                                                                    //     console.log("Synthesis Stopped");
+                                                                                    // }
+
+                                                                                   window.speechSynthesis.speak(msg);
+                                                                                }
+                                                                            }
+
+                                                                            // function pause()
+                                                                            // {
+                                                                            //     //speechSynthesis pauses all SpeechSynthesisUtterance objects outputs.
+                                                                            //     if(speechSynthesis.paused === false)
+                                                                            //     {
+                                                                            //         speechSynthesis.pause();
+                                                                            //     }
+                                                                            // }   
+
+                                                                            // function resume()
+                                                                            // {
+                                                                            //     //speechSynthesis resumes all SpeechSynthesisUtterance objects outputs.
+                                                                            //     if(speechSynthesis.paused === true)
+                                                                            //     {
+                                                                            //         speechSynthesis.resume();
+                                                                            //     }
+                                                                            // }
+
+                                                                            // function stop()
+                                                                            // {
+                                                                            //     //speechSynthesis stops all SpeechSynthesisUtterance objects outputs and deleted them from memory.
+                                                                            //     speechSynthesis.cancel();
+                                                                            // }
+
+                                                                            function select_voices()
+                                                                            {
+                                                                                var sel_element = document.getElementById("select_voice").options[document.getElementById("select_voice").selectedIndex];
+                                                                                default_lang = sel_element.getAttribute("value");
+                                                                                default_voiceURI = sel_element.getAttribute("data-voice-uri");
+                                                                                voice=available_voices[document.getElementById("select_voice").selectedIndex]; //sel_element.getAttribute("value");
+                                                                                
+                                                                            }
+                                                                            
+
 
                                                                     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+                                                                    var langs =
+                                                                    [['Afrikaans',       ['af-ZA']],
+                                                                    ['Bahasa Indonesia',['id-ID']],
+                                                                    ['Bahasa Melayu',   ['ms-MY']],
+                                                                    ['Català',          ['ca-ES']],
+                                                                    ['Čeština',         ['cs-CZ']],
+                                                                    ['Deutsch',         ['de-DE']],
+                                                                    ['English',         ['en-AU', 'Australia'],
+                                                                                        ['en-CA', 'Canada'],
+                                                                                        ['en-IN', 'India'],
+                                                                                        ['en-NZ', 'New Zealand'],
+                                                                                        ['en-ZA', 'South Africa'],
+                                                                                        ['en-GB', 'United Kingdom'],
+                                                                                        ['en-US', 'United States']],
+                                                                    ['Español',         ['es-AR', 'Argentina'],
+                                                                                        ['es-BO', 'Bolivia'],
+                                                                                        ['es-CL', 'Chile'],
+                                                                                        ['es-CO', 'Colombia'],
+                                                                                        ['es-CR', 'Costa Rica'],
+                                                                                        ['es-EC', 'Ecuador'],
+                                                                                        ['es-SV', 'El Salvador'],
+                                                                                        ['es-ES', 'España'],
+                                                                                        ['es-US', 'Estados Unidos'],
+                                                                                        ['es-GT', 'Guatemala'],
+                                                                                        ['es-HN', 'Honduras'],
+                                                                                        ['es-MX', 'México'],
+                                                                                        ['es-NI', 'Nicaragua'],
+                                                                                        ['es-PA', 'Panamá'],
+                                                                                        ['es-PY', 'Paraguay'],
+                                                                                        ['es-PE', 'Perú'],
+                                                                                        ['es-PR', 'Puerto Rico'],
+                                                                                        ['es-DO', 'República Dominicana'],
+                                                                                        ['es-UY', 'Uruguay'],
+                                                                                        ['es-VE', 'Venezuela']],
+                                                                    ['Euskara',         ['eu-ES']],
+                                                                    ['Français',        ['fr-FR']],
+                                                                    ['Galego',          ['gl-ES']],
+                                                                    ['Hrvatski',        ['hr_HR']],
+                                                                    ['IsiZulu',         ['zu-ZA']],
+                                                                    ['Íslenska',        ['is-IS']],
+                                                                    ['Italiano',        ['it-IT', 'Italia'],
+                                                                                        ['it-CH', 'Svizzera']],
+                                                                    ['Magyar',          ['hu-HU']],
+                                                                    ['Nederlands',      ['nl-NL']],
+                                                                    ['Norsk bokmål',    ['nb-NO']],
+                                                                    ['Polski',          ['pl-PL']],
+                                                                    ['Português',       ['pt-BR', 'Brasil'],
+                                                                                        ['pt-PT', 'Portugal']],
+                                                                    ['Română',          ['ro-RO']],
+                                                                    ['Slovenčina',      ['sk-SK']],
+                                                                    ['Suomi',           ['fi-FI']],
+                                                                    ['Svenska',         ['sv-SE']],
+                                                                    ['Türkçe',          ['tr-TR']],
+                                                                    ['български',       ['bg-BG']],
+                                                                    ['Pусский',         ['ru-RU']],
+                                                                    ['Српски',          ['sr-RS']],
+                                                                    ['한국어',            ['ko-KR']],
+                                                                    ['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'],
+                                                                                        ['cmn-Hans-HK', '普通话 (香港)'],
+                                                                                        ['cmn-Hant-TW', '中文 (台灣)'],
+                                                                                        ['yue-Hant-HK', '粵語 (香港)']],
+                                                                    ['日本語',           ['ja-JP']],
+                                                                    ['Lingua latīna',   ['la']]];
 
 
+                                                                    function updateCountry() {
+                                                                        for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+                                                                            select_dialect.remove(i);
+                                                                        }
+                                                                        var list = langs[select_language.selectedIndex];
+                                                                        for (var i = 1; i < list.length; i++) {
+                                                                            select_dialect.options.add(new Option(list[i][1], list[i][0]));
+                                                                        }
+                                                                        select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+                                                                    }
 
 
 
@@ -1203,15 +1672,20 @@
 
                                             </div>
                                         </div>
-                                           
+                                          
                                         </div>
                                     <div class="panel panel-primary collapsible">
+                                          <a name="summarypage3"></a>
+                                           <a name="summarypage2"></a>
+                                           <a name="summarypage"></a>
+                                          
                                         <div class="panel-heading clickable animate" data-toggle="collapse" href="#powerInterfacePanel">
                                            
                                             <h4 class="panel-title">
                                                 View Summary
                                                 <span class="fa fa-chevron-up fa-lg fa-rotate-180 animate pull-right"></span>
                                             </h4>
+                                             
                                         </div>
                                         <div id="powerInterfacePanel" class="panel-collapse ">
                                             <div class="panel-body">
@@ -1223,7 +1697,7 @@
                                                                     <tr>
                                                                         <td>
                                                                             <div>
-                                                                                
+                                                                                 
                                                                                 <div id="divProcessing" class="col-md-6" style="display:none;">
 
                                                                                     <img alt="processing" src="images/processing.gif" /><img alt="ajax-progress" src="images/ajax-progress.gif" width="50" height="50" />
@@ -1237,7 +1711,7 @@
                                                                                 <!--[if lt IE 8]>
                                                                                     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
                                                                                 <![endif]-->
-                                                                                <div id="imageviewer">
+                                                                                <div id="imageviewerrequest">
 
                                                                                     <!-- Content -->
                                                                                     <div class="row">
@@ -1245,7 +1719,12 @@
                                                                                         <div class="docs-galley">
                                                                                             <ul class="docs-pictures clearfix">
                                                                                                 <div class="row" id="image_preview"></div>
-                                                                                                <!--<img id="requestimage" class='imagePreview' src="C:\Users\patelsuj\Desktop\Code\30thJune2017\Final\str_123.jpg" data-original="C:\Users\patelsuj\Desktop\Code\30thJune2017\Final\str_123.jpg" alt=""/>-->
+                                                                                                <!--<img id="requestimage" class='imagePreview' src="str_123.jpg" data-original="str_123.jpg" alt=""/>-->
+                                                                                                <div id="divprocessedimage" style="padding-left:10px;">
+                                                                                                    <span style="padding-left:5px;">See processed image/logs here</span>
+                                                                                                    <img alt="" id="imgprocessedimage" src="" class="respimage" />
+                                                                                                    <span style="padding-left:10px;">Click on the image to maximize. Press Escape or click on Close to cancel.</span>
+                                                                                                </div>
                                                                                             </ul>
                                                                                         </div>
 
@@ -1258,10 +1737,7 @@
                                                                                     <script src="js/viewer.js"></script>
                                                                                     <script src="js/main.js"></script>
                                                                                 </div>
-                                                                                 <div id="divprocessedimage">
-                                                                                   
-                                                                                    <img alt="See processed image/logs here" id="imgprocessedimage" src="" width="600" height="500" />
-                                                                                </div>
+                                                                                 
                                                                             </div>
                                                                         </td>
                                                                     </tr>
@@ -1275,7 +1751,8 @@
                                     </div>
                                        
                                         <div class="panel panel-primary collapsible">
-                                           
+                                           <a name="srpage"></a>
+                                           <a name="srpage2"></a>
                                             <div class="panel-heading clickable animate" data-toggle="collapse" href="#srpanel">
 
                                                 <h4 class="panel-title">
@@ -1336,18 +1813,28 @@
 
 
                     </div>
+                    
                 </div>
 
 
 
 
-                <div class="popup-box chat-popup nav-brand" id="qnimate"><h4 class="nav-page-name" style="vertical-align:top;padding-right:75px">Jarvis&nbsp;Support</h4><img id="imgefresh" src="images/btnrefresh.png" width="35" height="35" style="vertical-align:top" onclick="clearchat()" />&nbsp;&nbsp;<label class="switch">
+                <div class="popup-box chat-popup nav-brand" id="qnimate"><h4 class="nav-page-name" style="vertical-align:top;padding-right:75px">Jarvis&nbsp;Support</h4><img id="imgefresh" src="images/btnrefresh.png" width="30" height="30" style="vertical-align:top;cursor: pointer;" onclick="clearchat()" />&nbsp;&nbsp;<label class="switch">
     <input type="checkbox" id="chkspeaker" checked>
     <div class="slider round"></div>
 </label>
+
                     <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+                    <div id="div_language">
+    <select id="select_language" onchange="updateCountry()" style="width:80px;" class="select"></select>
+    &nbsp;&nbsp;
+    <select id="select_dialect" style="width:110px;" class="select"></select>
+     &nbsp;&nbsp;
+     <select id="select_voice" style="width:135px;" class="select" onchange="select_voices()"></select>
+  </div>
                     <div class="popup-head nav-brand">
                         <div id="powerSummaryPanel1">
+                            
                             <!--<iframe width="335" height="430" src="https://console.api.ai/api-client/demo/embedded/5beca097-fad4-4b60-bc74-8564a4fae2b9"></iframe>-->
                             
                             <!--<iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/dd7a1219-f49f-4fa1-b99d-e37e3a560620"></iframe>-->
@@ -1403,6 +1890,11 @@
                   </div>
                 </div>-->
                                     </div>
+                                    <div id="results">
+  <span id="final_span" class="final"></span>
+  <span id="interim_span" class="interim"></span>
+  <p>
+</div>
                                     <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200" rel="stylesheet" type="text/css">
                                 </div>
                             </div>
@@ -1432,7 +1924,7 @@
                     </div>
                 </div>
 
-                <footer><a name="srpage"></a>
+                <footer>
 
                     <!--@Styles.Render("~/bundles/fontawesome")
                 @RenderSection("Styles", required: false)
